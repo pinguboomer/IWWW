@@ -1,0 +1,30 @@
+
+
+@media (max-width: 800px){
+    .centeredContentWrapper {
+        width: 100%;
+    }
+    .pageHeading {
+        font-size: 4em;
+    }
+    footer {
+        flex-direction: column;
+    }
+
+    .blogPostPreview{
+        width: 250px;
+        border: 0;
+    }
+
+    .blogPostPreview img{
+        width: 100%;
+    }
+
+    .centeredContentWrapper{
+        margin-top:50px;
+    }
+    .plnyObrazek {
+        width: 80%;
+        margin-top: 50px;
+    }
+}
