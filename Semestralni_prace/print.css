@@ -1,0 +1,8 @@
+@media print {
+    #menu, #hero, footer {
+        display: none;
+    }
+    .blogPostPreview > img {
+        width: 100px;
+    }
+}

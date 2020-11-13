@@ -1,0 +1,81 @@
+/*--------------header-----------*/
+.pageHeading {
+    display: flex;
+    margin-top:10px;
+    margin-left:50px;
+    font-size: 50px;
+    color: white;
+    text-shadow: 0 0 10px navy;
+}
+
+header {
+    background-color: black;
+    height: 100px;
+    display:flex;
+    justify-content: space-around;
+}
+
+#log_and_cart {
+    display: flex;
+}
+
+.log {
+    text-align: center;
+}
+
+.log a {
+    font-size: 1em;
+}
+
+.log a > img{
+    margin-top:10px;
+    text-align: center;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.logout {
+    margin-left: 10%;
+    text-align: center;
+}
+
+.logout a {
+    font-size: 1em;
+}
+
+.logout a > img{
+    margin-top:10px;
+    text-align: center;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.hero {
+    min-width: 400px;
+    display: flex;
+    cursor: pointer;
+}
+
+.hero a {
+    display: flex;
+    margin-top:10px;
+    font-size: 50px;
+    color: white;
+    text-shadow: 0 0 10px navy;
+}
+.hero a > img{
+    width: 70px;
+    height: 85px;
+}
+
+.logheader {
+    margin-top: 0;
+    font-size: 1em;
+}
+
+.logheader_cart {
+    margin-top: 0;
+    font-size: 1em;
+}

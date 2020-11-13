@@ -1,0 +1,49 @@
+#menu label, #menu input {
+    display: none;
+}
+
+
+/*-------Po najeti mysi na odkaz v menu---------*/
+a:hover {
+    color: deepskyblue;
+    transition: 1s;
+}
+
+
+@media only screen and (max-width: 500px){
+    #menu label {
+        position: absolute;
+        right: 20px;
+        display: inline-block;
+        color: white;
+        background: #e4e6ad;
+        padding: 10px;
+        font-size: 2em;
+        font-style: normal;
+        width: 30px;
+    }
+
+    .blogPostPreview{
+        font-size: 100%;
+    }
+
+    .blogPostPreview > img{
+        width: 250px;
+    }
+
+    nav a {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+    }
+    nav {
+        display: none;
+    }
+
+    #menu input:checked ~ nav {
+        display: block;
+        margin-right: 100px;
+    }
+
+
+}

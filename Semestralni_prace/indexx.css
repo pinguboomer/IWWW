@@ -1,0 +1,172 @@
+/*-----------------------Obecne-----------------*/
+body {
+    margin: 0; /* vnejsi odsazeni ze vsech stran*/
+    background-color: black;
+    color:white;
+
+}
+#menu {
+    padding: 15px 50px 15px 50px;
+    background-image: linear-gradient(navy , black);
+    margin: auto;
+    display: flex; /*zobrazeni zasebou */
+    justify-content: space-between; /*zarovnani polozek na ose (když 2 tak jeden doleva druhy doprava)*/
+
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    font-size: 30px;
+}
+
+
+
+/*---------Hlavni content wrapper pro vetsinu stranek----------*/
+.centeredContentWrapper {
+    margin: auto;
+    background-color: black;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    color: white;
+    width: 100%;
+    height: auto;
+    min-height: 50vh;
+}
+
+/*-------------------defaultni tabulka-------------*/
+table, th, td {
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+}
+
+th {
+    text-align: left;
+}
+table {
+    border-spacing: 5px;
+    color:white;
+}
+
+tr:nth-child(even){
+    background-color: navy;
+}
+
+tr:nth-child(odd){
+    background-color: black;
+}
+
+/*-----------------------------------------------*/
+.fullImageFromIndexGallery{
+    height: auto;
+    display: block;
+    position: relative;
+    margin: auto;
+    border: 10px solid navy;
+    width: 100%;
+    max-width: 1000px;
+}
+
+
+/*----------navigation-------*/
+nav {
+    word-spacing: 10px;
+}
+
+/*--------------button na nakup z products-----------------*/
+.buy-button {
+    margin:5px;
+    padding: 5px;
+    width: 75%;
+    font-size: 100%;
+    text-align: center;
+    border:1px solid darkred;
+    background-color: darkblue;
+}
+
+a.buy-button{
+    display:block;
+    margin: auto;
+}
+
+a > img {
+    width: 200px;
+}
+
+
+/*-------------------footer-----------------------*/
+footer {
+    padding: 50px;
+    background-image: linear-gradient(black, navy);
+    display: flex;
+    justify-content: space-around;
+    color:white;
+    clear: both;
+    position: relative;
+    height: 200px;
+}
+
+.footerHeading {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+footer a {
+    font-size: 16px;
+}
+
+/*-------------------profil------------------*/
+.borders_top_and_down {
+    border-top: 5px solid;
+    border-bottom: 5px solid;
+    border-image-slice: 0.5;
+    border-image-source: radial-gradient(darkblue 80%, black);
+
+}
+
+.row-profile {
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#profile_buttons {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+}
+
+.default-button {
+    min-width: 60px;
+    padding: 5px;
+    font-size: 10px;
+    text-align: center;
+    border:1px solid white;
+    background-color:navy;
+    width:40%;
+}
+
+a.default-button{
+    display:block;
+    margin:auto;
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+    border:1px solid white;
+    background-color:navy;
+}
+
+.default-button:hover{
+    border:1px solid deepskyblue;
+    transition: 0.3s;
+}
+
+
+

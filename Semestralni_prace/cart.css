@@ -1,0 +1,156 @@
+/*--------------tabulka v kosiku---------*/
+
+table.shopcarttable {
+    margin:auto;
+    color: white;
+}
+table.shopcarttable th {
+    background-color: black;
+    text-align: center;
+    border-bottom: 1px solid yellow;
+}
+
+table.shopcarttable tr {
+    background-color: black;
+    text-align: center;
+
+
+}
+table.shopcarttable td {
+    border-bottom: 1px solid yellow;
+}
+
+/*--------------buttony v kosiku---------*/
+
+.cart-button {
+    font-size: 1em;
+    margin:5px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid white;
+    background-color: transparent;
+    color:white;
+    border-radius: 5px;
+}
+
+a.cart-button {
+    display:block;
+    color: white;
+}
+
+.cart-button:hover {
+    background-color: red;
+    color:white;
+    transition: 0.3s;
+}
+
+.cart-buttonAdd {
+    font-size: 1em;
+    margin:5px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid white;
+    background-color: transparent;
+    color:white;
+    border-radius: 5px;
+}
+
+a.cart-buttonAdd {
+    display:block;
+    color: white;
+}
+
+.cart-buttonAdd:hover{
+    background-color: deepskyblue;
+    color:white;
+    transition: 0.3s;
+}
+
+.payment-button {
+    margin-right:50px;
+    padding: 5px;
+    text-align: center;
+    border:1px solid white;
+    background-color:navy;
+}
+
+.payment-button:hover {
+    border:1px solid deepskyblue;
+}
+
+
+a.payment-button{
+    display:block;
+    width: 300px;
+    margin:auto;
+}
+
+/*--------------zpusoby platby---------*/
+
+.row-cashdesk {
+    cursor: pointer;
+    display: flex;
+    text-align: left;
+}
+
+
+.row-cashdesk input[type="radio"]{
+    width: 20%;
+}
+
+
+
+/*----------Polozky v kosiku---*/
+
+.cart-item {
+    justify-content: space-between;
+    display:flex;
+    margin: 5px;
+    border: 1px solid yellow;
+    padding: 10px;
+}
+
+.cart-quantity {
+    margin: 10px;
+}
+.cart-price {
+    margin: 10px;
+}
+
+.cart-control {
+    font-size: 30px;
+}
+.cart-heading {
+    font-size: 20px;
+    justify-content: right;
+}
+
+.cart-item-heading {
+    margin: 5px;
+    border: 1px solid yellow;
+    padding: 10px;
+    justify-content: space-around;
+    display:flex;
+    font-size: 20px;
+}
+
+.empty_cart {
+    padding-top: 5%;
+    width: 100%;
+    text-align: center;
+}
+
+.empty_cart > label{
+    width: 100%;
+    font-size: 50px;
+}
+
+a#a_in_cart {
+    font-size: 20px;
+}
+
+#a_in_cart > img {
+    width: 70px;
+    height: 70px;
+}
+

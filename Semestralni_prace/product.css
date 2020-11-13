@@ -1,0 +1,206 @@
+/*-----------------Blok, kde jsou itemy v products----------------*/
+.products_main{
+    flex-wrap: wrap;
+    width: 70%;
+}
+/*-----------------Zobrazeni jednotlive itemu v products---------------*/
+.blogPostPreview {
+    margin: 10px;
+    width: 250px;
+    /*border: 1px dotted white;*/
+    text-align: center;
+    font-size: 20px;
+    color: white;
+}
+
+.blogPostPreview:hover {
+    border: 2px solid white;
+    border-bottom: transparent;
+    border-top: transparent;
+}
+
+.blogPostPreview > img {
+    width: 200px;
+}
+
+#blogPostList {
+    display: flex;
+    justify-content: space-around; /*mezery mezi vsechny prvky*/
+    flex-wrap: wrap; /* zalomeni radku napr. dalsi obrazek pujde uz pod predchozi*/
+
+}
+
+
+/*---------------zobrazeni detailu itemu---------------------*/
+
+.product_detail_wrapper {
+    padding: 50px;
+    margin:auto;
+}
+
+.product {
+    margin-top:10px;
+    justify-content: left;
+    margin-left: 40px;
+  /*  border: 1px solid white;*/
+    display: flex;
+}
+
+.product_info {
+    margin-left: 80px;
+}
+
+.product_name {
+    font-size: 50px;
+}
+
+.product_price {
+    padding-left: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.product_quantity {
+    margin-left: 0;
+    padding:10px;
+    display:flex;
+    margin-right: 0;
+}
+
+.product input[type="number"]{
+    width: 20%;
+}
+
+.product input[type="submit"]{
+    width: 50%;
+}
+
+.product_q_label {
+    margin-top: 5px;
+    margin-right: 20px;
+    font-size: 20px;
+}
+
+.product_description {
+    padding:10px;
+}
+
+/*-------------kategorie u products-------------------*/
+
+#category label, #category input {
+    display: none;
+}
+
+#category {
+    padding: 15px 50px 15px 50px;
+    background-image: linear-gradient(navy , black);
+    margin: auto;
+    display: flex; /*zobrazeni zasebou */
+    justify-content: space-between; /*zarovnani polozek na ose (když 2 tak jeden doleva druhy doprava)*/
+
+}
+
+.categoryMenu{
+    border-right: 5px solid;
+    border-image-slice: 0.5;
+    border-image-source: radial-gradient(darkblue 80%, black);
+    width: 325px;
+}
+
+.category_button {
+    padding: 5px;
+    text-align: center;
+    margin-left: 10px;
+    background-image: radial-gradient(navy, black 75%);
+}
+
+.category_button:hover {
+    padding: 5px;
+    text-align: center;
+    background-image: radial-gradient(green, black 75%);
+}
+
+
+a.category_button{
+    color:white;
+    margin-top: 10px;
+    display:block;
+    width: 300px;
+}
+
+a.category_button:hover{
+    color:white;
+    transition: 0.5s;
+}
+
+#sort_by {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid;
+    border-image-slice: 0.5;
+    border-image-source: radial-gradient(darkblue 80%, black);
+    font-size: 2em;
+    padding-left: 20px;
+}
+
+/*-------------Lista na serazeni produktu----------*/
+.row_sort {
+    margin-top: 10px;
+    width: 10%;
+    min-width: 170px;
+    display:flex;
+}
+
+.row_sort label {
+    cursor: pointer;
+    width:auto;
+}
+
+.row_sort input[type="radio"]{
+    width: 20px;
+    margin-top: 7px;
+    margin-left: 0;
+    transform: scale(1.7);
+    cursor: pointer;
+}
+
+.sorting_radios {
+    flex-wrap: wrap;
+    display:flex;
+    font-size: 1.5em;
+    width: 90%;
+    padding-left: 10px;
+}
+
+.sorting_radios input[type="submit"]{
+    margin-top: 5px;
+    background-color: navy;
+    border:1px solid white;
+    font-size: 0.7em;
+    color: white;
+    cursor: pointer;
+    width: 50px;
+}
+
+.products_add_edit_buttons {
+    text-align: center;
+    border:1px solid white;
+    background-color:navy;
+}
+
+a.products_add_edit_buttons{
+    width: 50%;
+    margin: 50px auto;
+    display:block;
+}
+.add_product_form {
+    margin-top: 20px;
+    margin-left: 10%;
+    width: 50%;
+}
+
+.products_section {
+    display: flex;
+}
+
+
