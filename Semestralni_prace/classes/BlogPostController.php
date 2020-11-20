@@ -3,12 +3,11 @@
 
 class BlogPostController
 {
-    public static function changeUserSession($name, $surname, $email, $password)
+    public static function changeUserSession($name, $surname, $email)
     {
         $_SESSION["logged_user"]["name"] = $name;
         $_SESSION["logged_user"]["surname"] = $surname;
         $_SESSION["logged_user"]["email"] = $email;
-        $_SESSION["logged_user"]["password"] = $password;
     }
 
     public function listAllInTable()
@@ -36,9 +35,9 @@ class BlogPostController
         EshopPostRepository::insertUserRole($email);
     }
 
-    public function logUser($emailLogin, $passwordLogin)
+    public function logUser($emailLogin)
     {
-        $userLog = EshopPostRepository::logUser($emailLogin, $passwordLogin);
+        $userLog = EshopPostRepository::logUser($emailLogin);
         if (!empty($userLog)) {
             return $userLog;
         }
@@ -81,7 +80,7 @@ class BlogPostController
     {
         echo '<form action="/index.php?page=myProfile&action=completeEdit" method="post">';
         showUsersDataInTable($_SESSION["logged_user"]["name"],
-            $_SESSION["logged_user"]["surname"], $_SESSION["logged_user"]["email"], $_SESSION["logged_user"]["password"]);
+            $_SESSION["logged_user"]["surname"], $_SESSION["logged_user"]["email"]);
         echo '<div class="row">
             <input name="backToProfile" type="submit" style="width: 30%" value="Zpět">
             <label></label>
@@ -101,21 +100,17 @@ class BlogPostController
             if (empty($_POST["surnameEdit"])) {
                 FlashMessages::error("Není vyplněno příjmení");
             }
-            if (empty($_POST["passwordEdit"])) {
-                FlashMessages::error("Není zadané heslo");
-            }
 
             if (FlashMessages::containsError()) {
                 header("Location: /index.php?page=MyProfile&action=edit");
                 exit;
             } else {
 
-                $name = $_POST["nameEdit"];
-                $surname = $_POST["surnameEdit"];
-                $passwordEdit = $_POST["passwordEdit"];
-                $email = $_SESSION["email"];
-                EshopPostRepository::updateUser($name, $surname, $email, $passwordEdit);
-                self::changeUserSession($name, $surname, $email, $passwordEdit);
+                $name = htmlspecialchars($_POST["nameEdit"]);
+                $surname = htmlspecialchars($_POST["surnameEdit"]);
+                $email = htmlspecialchars($_SESSION["email"]);
+                EshopPostRepository::updateUser($name, $surname, $email);
+                self::changeUserSession($name, $surname, $email);
                 header("Location: /index.php?page=myProfile");
             }
         }
@@ -162,11 +157,11 @@ class BlogPostController
                 exit;
             } else {
                 $controller = new BlogPostController();
-                $country = $_POST["country"];
-                $city = $_POST["city"];
-                $street = $_POST["street"];
-                $zipcode = $_POST["zipcode"];
-                $phone = $_POST["phone"];
+                $country = htmlspecialchars($_POST["country"]);
+                $city = htmlspecialchars($_POST["city"]);
+                $street = htmlspecialchars($_POST["street"]);
+                $zipcode = htmlspecialchars($_POST["zipcode"]);
+                $phone = htmlspecialchars($_POST["phone"]);
                 $email = $_SESSION["email"];
                 $controller->addAddressAndUser_Address($country, $city, $street, $zipcode, $phone, $email);
                 $_SESSION["UserHasAlreadyAddress"] = true;
@@ -258,11 +253,11 @@ class BlogPostController
                 exit;
             } else {
                 $controller = new BlogPostController();
-                $country = $_POST["country"];
-                $city = $_POST["city"];
-                $street = $_POST["street"];
-                $zipcode = $_POST["zipcode"];
-                $phone = $_POST["phone"];
+                $country = htmlspecialchars($_POST["country"]);
+                $city = htmlspecialchars($_POST["city"]);
+                $street = htmlspecialchars($_POST["street"]);
+                $zipcode = htmlspecialchars($_POST["zipcode"]);
+                $phone = htmlspecialchars($_POST["phone"]);
                 $email = $_SESSION["email"];
                 $controller->updateAddress($country, $city, $street, $zipcode,
                     $phone, $_SESSION["address"]["id_address"]);
@@ -288,28 +283,28 @@ class BlogPostController
         if (isset($_SESSION)) {
             $item = EshopPostRepository::getItemById($item_id);
             if (!array_key_exists($item_id, $_SESSION["cart"])) {
-                    if (!empty($_POST["product_quantity"])) {
-                       if($_SESSION["cart"][$item_id]["quantity"] + $_POST["product_quantity"] <= $item["quantity"]){
-                            $_SESSION["cart"][$item_id]["quantity"] = $_POST["product_quantity"];
-                        }
-                    } else {
-                        if ($_SESSION["cart"][$item_id]["quantity"] + 1 <= $item["quantity"]) {
-                            $_SESSION["cart"][$item_id]["quantity"] = 1;
-                       }
+                if (!empty($_POST["product_quantity"])) {
+                    if ($_SESSION["cart"][$item_id]["quantity"] + $_POST["product_quantity"] <= $item["quantity"]) {
+                        $_SESSION["cart"][$item_id]["quantity"] = $_POST["product_quantity"];
                     }
                 } else {
+                    if ($_SESSION["cart"][$item_id]["quantity"] + 1 <= $item["quantity"]) {
+                        $_SESSION["cart"][$item_id]["quantity"] = 1;
+                    }
+                }
+            } else {
                 if (!empty($_POST["product_quantity"])) {
                     if ($_SESSION["cart"][$item_id]["quantity"] + $_POST["product_quantity"] <= $item["quantity"]) {
                         $_SESSION["cart"][$item_id]["quantity"] = $_SESSION["cart"]
                             [$item_id]["quantity"] + $_POST["product_quantity"];
-                   }
+                    }
                 } else {
                     if ($_SESSION["cart"][$item_id]["quantity"] + 1 <= $item["quantity"]) {
                         $_SESSION["cart"][$item_id]["quantity"]++;
                     }
                 }
             }
-            }
+        }
 
         header("Location: /index.php?page=shoppingCart");
     }
@@ -511,7 +506,7 @@ Odebrat z košíku</a></td></tr>';
                 $item["name"], $item["image"], $item["price"] * $value["quantity"],
                 $value["quantity"]);
             $new_quantity = $item["quantity"] - $value["quantity"];
-            EshopPostRepository::updateItem($item["id_item"], $new_quantity, $item["sold"]+1);
+            EshopPostRepository::updateItem($item["id_item"], $new_quantity, $item["sold"] + 1);
         }
         unset($_SESSION["cart"]);
         $_SESSION["totalPrice"] = 0;
@@ -526,13 +521,13 @@ Odebrat z košíku</a></td></tr>';
 <tr><th>Číslo objednávky</th>
 <th>Objednáno dne</th>
 <th>Zaplaceno částkou</th>';
-if($_SESSION["role"] == 2){
-    echo '<th></th><th></th></tr>';
-}else {
-    echo '<th></th></tr>';
-}
-        if($id == -1){
-        $user = EshopPostRepository::getUserByEmail($_SESSION["email"]);
+        if ($_SESSION["role"] == 2) {
+            echo '<th></th><th></th></tr>';
+        } else {
+            echo '<th></th></tr>';
+        }
+        if ($id == -1) {
+            $user = EshopPostRepository::getUserByEmail($_SESSION["email"]);
         } else {
             $user = EshopPostRepository::getUserById($id);
         }
@@ -545,7 +540,7 @@ if($_SESSION["role"] == 2){
                 <td><h3>' . $order["total_price"] . ' Kč</h3></td>
             <td><h3><a href="/index.php?page=orders&action=detail&id=' . $orderId[$k]["id_order"] . '
 " class="payment-button" >Detail objednávky</a></h3></td>';
-            if($_SESSION["role"] == 2){
+            if ($_SESSION["role"] == 2) {
                 echo '<td><h3><a href="/index.php?page=orders&action=delete&id=' . $orderId[$k]["id_order"] . '
 " class="payment-button" >Odstranit objednávku</a></h3></td></tr>';
             } else {
@@ -759,6 +754,7 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
         }
     }
 
+
     //--------------------------ADMIN-----------------------------------------------
 
     public function editProfileAsAdmin($id)
@@ -787,9 +783,6 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
             if (empty($_POST["emailEdit"])) {
                 FlashMessages::error("Není vyplněn email");
             }
-            if (empty($_POST["passwordEdit"])) {
-                FlashMessages::error("Není zadané heslo");
-            }
             if ($this->checkUniqueEmail($_POST["emailEdit"]) != null &&
                 $_POST["emailEdit"] != $_SESSION["edited_user"]["email"]) {
                 FlashMessages::error("Email je již zabrán!");
@@ -799,12 +792,10 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
                     . $_SESSION["edited_user"]["id_user"] . '');
                 exit;
             } else {
-                $controller = new BlogPostController();
-                $name = $_POST["nameEdit"];
-                $surname = $_POST["surnameEdit"];
-                $passwordEdit = $_POST["passwordEdit"];
-                $email = $_POST["emailEdit"];
-                EshopPostRepository::updateUserById($_SESSION["edited_user"]["id_user"], $name, $surname, $email, $passwordEdit);
+                $name = htmlspecialchars($_POST["nameEdit"]);
+                $surname = htmlspecialchars($_POST["surnameEdit"]);
+                $email = htmlspecialchars($_POST["emailEdit"]);
+                EshopPostRepository::updateUserById($_SESSION["edited_user"]["id_user"], $name, $surname, $email);
                 header("Location: /index.php?page=usersList");
             }
         }
@@ -889,7 +880,8 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
                 $pathToFile = $_SESSION["edited_product"]["image"];
             }
 
-            if (EshopPostRepository::updateProduct($id, $pathToFile, $_POST["name"], $_POST["description"],
+            if (EshopPostRepository::updateProduct($id, $pathToFile, htmlspecialchars($_POST["name"]),
+                htmlspecialchars($_POST["description"]),
                 $_POST["price"], $_POST["quantity"])) {
                 EshopPostRepository::updateItemCategory($id, $_POST["category"]);
                 header("Location: /index.php?page=itemsList");
@@ -1008,15 +1000,16 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
         $dataTable->addColumn("name", "Jméno");
         $dataTable->addColumn("surname", "Příjmení");
         $dataTable->addColumn("email", "Email");
-        $dataTable->addColumn("password", "Heslo");
+        //  $dataTable->addColumn("password", "Heslo");
         $dataTable->renderUsers();
     }
+
 
 }
 
 //--------------------FUNCTIONS----------------------------
 
-function showUsersDataInTable($name, $surname, $email, $password)
+function showUsersDataInTable($name, $surname, $email)
 {
     echo ' <div class="row">
             <label>Jméno: (*)</label>
@@ -1029,10 +1022,6 @@ function showUsersDataInTable($name, $surname, $email, $password)
         <div class="row">
             <label>Email: (*)</label>
             <label>' . $email . '</label>
-        </div>
-        <div class="row">
-            <label>Heslo: (*)</label>
-            <input name="passwordEdit" type="password" value="' . $password . '">
         </div>';
 }
 
@@ -1050,10 +1039,6 @@ function showUsersDataInTableAsAdmin($editedUser)
         <div class="row">
             <label>Email: (*)</label>
             <input name="emailEdit" type="text" value="' . $editedUser["email"] . '">
-        </div>
-        <div class="row">
-            <label>Heslo: (*)</label>
-            <input name="passwordEdit" type="password" value="' . $editedUser["password"] . '">
         </div>';
 }
 
@@ -1109,23 +1094,23 @@ function showAddressFormWithUsersAddressInOrder()
 {
     echo '<div class="row">
             <label>Země:</label>
-            <label>' . $_POST["country"] . '</label>
+            <label>' . htmlspecialchars($_POST["country"]) . '</label>
         </div>
         <div class="row">
             <label>Město:</label>
-            <label>' . $_POST["city"] . '</label>
+            <label>' . htmlspecialchars($_POST["city"]) . '</label>
         </div>
         <div class="row">
             <label>Ulice:</label>
-            <label>' . $_POST["street"] . '</label>
+            <label>' . htmlspecialchars($_POST["street"]) . '</label>
         </div>
         <div class="row">
             <label>PSČ:</label>
-            <label>' . $_POST["zipcode"] . '</label>
+            <label>' . htmlspecialchars($_POST["zipcode"]) . '</label>
         </div>
         <div class="row">
             <label>Mobil:</label>
-            <label>' . $_POST["phone"] . '</label>
+            <label>' . htmlspecialchars($_POST["phone"]) . '</label>
         </div>
         <div class="row">
             <label>Email:</label>
@@ -1218,11 +1203,11 @@ function checkValidityAddress()
         if (FlashMessages::containsError()) {
             return false;
         } else {
-            $_SESSION["order_country"] = $_POST["country"];
-            $_SESSION["order_city"] = $_POST["city"];
-            $_SESSION["order_street"] = $_POST["street"];
-            $_SESSION["order_zipcode"] = $_POST["zipcode"];
-            $_SESSION["order_phone"] = $_POST["phone"];
+            $_SESSION["order_country"] = htmlspecialchars($_POST["country"]);
+            $_SESSION["order_city"] = htmlspecialchars($_POST["city"]);
+            $_SESSION["order_street"] = htmlspecialchars($_POST["street"]);
+            $_SESSION["order_zipcode"] = htmlspecialchars($_POST["zipcode"]);
+            $_SESSION["order_phone"] = htmlspecialchars($_POST["phone"]);
             return true;
         }
     }
@@ -1242,3 +1227,7 @@ function showProduct($item)
             </article>';
     }
 }
+
+?>
+
+

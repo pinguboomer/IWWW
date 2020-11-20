@@ -60,13 +60,11 @@ class EshopPostRepository
         return $stmt->fetch();
     }
 
-    public static function logUser($emailLogin, $passwordLogin)
+    public static function logUser($emailLogin)
     {
         $conn = Connection::getPdoInstance();
-        $stmt = $conn->prepare("SELECT * FROM user_in_shop WHERE email = :emailLogin 
-AND password = :passwordLogin");
+        $stmt = $conn->prepare("SELECT * FROM user_in_shop WHERE email = :emailLogin LIMIT 1");
         $stmt->bindParam(":emailLogin", $emailLogin);
-        $stmt->bindParam(":passwordLogin", $passwordLogin);
         $stmt->execute();
         return $stmt->fetch();
     }
@@ -370,15 +368,14 @@ VALUES (:pathToFile, :name, :text, :price, :quantity)";
         return true;
     }
 
-    public static function updateUser($name, $surname, $email, $passwordEdit)
+    public static function updateUser($name, $surname, $email)
     {
         $conn = Connection::getPdoInstance();
         $stmt = $conn->prepare("UPDATE user_in_shop
-         SET name = :name, surname = :surname, password =:password WHERE email = :email");
+         SET name = :name, surname = :surname WHERE email = :email");
         $stmt->bindParam(":name", $name);
         $stmt->bindParam(":surname", $surname);
         $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":password", $passwordEdit);
         $stmt->execute();
         return true;
     }
@@ -399,16 +396,15 @@ VALUES (:pathToFile, :name, :text, :price, :quantity)";
         return true;
     }
 
-    public static function updateUserById($id_user, $name, $surname, $email, $passwordEdit)
+    public static function updateUserById($id_user, $name, $surname, $email)
     {
         $conn = Connection::getPdoInstance();
         $stmt = $conn->prepare("UPDATE user_in_shop
-         SET name = :name, surname = :surname, email = :email, password =:password WHERE id_user = :id_user");
+         SET name = :name, surname = :surname, email = :email WHERE id_user = :id_user");
         $stmt->bindParam(":id_user", $id_user);
         $stmt->bindParam(":name", $name);
         $stmt->bindParam(":surname", $surname);
         $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":password", $passwordEdit);
         $stmt->execute();
         return true;
     }

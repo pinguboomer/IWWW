@@ -13,7 +13,7 @@ ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu 
     <meta charset="UTF-8">
     <title>Fotbal Shop</title>
     <link rel="stylesheet" href="headeer.css">
-    <link rel="stylesheet" href="indexx.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="product.css">
     <link rel="stylesheet" href="cart.css">
     <link rel="stylesheet" href="responsive.css">
@@ -30,9 +30,11 @@ include "menu.php";
 FlashMessages::displayAllMessages(); // zobrazuje chybove hlasky TODO: predelat do lepsi podoby
 $_SESSION["sorted_by"] = "none";
 if(isset($_GET["page"])) {
-    $pathToFile = "./page/" . $_GET["page"] . ".php";
-    if (file_exists($pathToFile)) {
-        include $pathToFile;
+   if(preg_match("/^[a-z-A-Z-0-9-\.]+$/", $_GET["page"])) {
+        $pathToFile = "./page/" . $_GET["page"] . ".php";
+        if (file_exists($pathToFile)) {
+            include $pathToFile;
+       }
     }
 }else {
     if(isset($_GET['picture'])){

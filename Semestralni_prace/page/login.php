@@ -10,10 +10,12 @@ if ($_POST) {
         if (!($controller->checkUniqueEmail($emailLogin))) {
             echo "Uživatel neexistuje!";
         } else {
-            $loggedUser = $controller->logUser($emailLogin, $passwordLogin);
-            if ($loggedUser == null) {
+            $loggedUser = $controller->logUser($emailLogin);
+            $passwordResult = password_verify($passwordLogin, $loggedUser["password"]);
+            if(!$passwordResult){
                 echo "Špatné heslo!";
-            } else {
+            }
+            else {
                 $_SESSION["logged_user"] = $loggedUser;
                 $_SESSION["email"] = $_SESSION["logged_user"]["email"];
                 $loggedRole = $controller->getRoleByUserId($loggedUser["id_user"]);

@@ -13,9 +13,9 @@ if ($_POST) {
         $name = $_POST["name"];
         $surname = $_POST["surname"];
         $email = $_POST["emailRegister"];
-        $passwordRegister = $_POST["passwordRegister"];
+        $passwordRegister = password_hash($_POST["passwordRegister"], PASSWORD_BCRYPT);
         if($controller->checkUniqueEmail($email) != null){
-            echo "Uživatel se stejným emailem už existuje!";
+            echo "Uživatel již existuje";
         } else {
             $controller->addUser($name, $surname, $email, $passwordRegister);
             echo "Registrace úspěšná!";
@@ -24,7 +24,6 @@ if ($_POST) {
 }
 
 ?>
-
 <section class="centeredContentWrapper" style="width: 400px">
     <form action="/index.php?page=register" method="post">
         <div class="row">
@@ -49,3 +48,19 @@ if ($_POST) {
         </div>
     </form>
 </section>
+
+<script>
+    const inputFieldToValidate = document.getElementsByClassName("validate")
+    for(const input of inputFieldToValidate){
+        input.addEventListener("keyup", function (e){
+            const value = e.target.value;
+            if(value.length < 5){
+                e.target.classList.add("error");
+                e.target.classList.remove("valid");
+            } else {
+                e.target.classList.remove("error");
+                e.target.classList.add("valid");
+            }
+        });
+    }
+</script>
