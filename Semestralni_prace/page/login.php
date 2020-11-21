@@ -35,7 +35,7 @@ if ($_POST) {
                 if (isset($_POST["keepLogin"])) {
                     setcookie("keepLogin", $_POST["keepLogin"], time() + (86400 * 30), "/");
                 }
-                header("Location: /index.php");
+                header("Location: /index.php?page=products");
             }
         }
     }
