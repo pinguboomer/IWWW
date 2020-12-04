@@ -13,7 +13,7 @@ ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu 
     <meta charset="UTF-8">
     <title>Fotbal Shop</title>
     <link rel="stylesheet" href="headeer.css">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="indexx.css">
     <link rel="stylesheet" href="product.css">
     <link rel="stylesheet" href="cart.css">
     <link rel="stylesheet" href="responsive.css">

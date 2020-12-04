@@ -437,7 +437,8 @@ Odebrat z košíku</a></td></tr>';
                 $_SESSION["zpusob_dodani"] = $_POST["zpusob_dodani"];
             }
         }
-        echo '<form action="/index.php?page=cashdesk&action=completeOrder" method="post">
+        echo '<div style="width: 50%; margin: auto; min-width: 300px">
+<form action="/index.php?page=cashdesk&action=completeOrder" method="post">
 <div class="row">
             <label>Platba:</label>
             <label>' . $_SESSION["zpusob_platby"] . '</label>
@@ -456,14 +457,14 @@ Odebrat z košíku</a></td></tr>';
         echo '<div class="row">
             <input name="backToCashDesk" type="submit" value="Zpět">
             <input name="completeOrderPost" type="submit" value="Dokončit objednávku">
-        </div></form>';
+        </div></form></div>';
     }
 
     public function showConfirmOrder()
     {
         if (!checkValidityAddress()) {
-            self::showConfirmAddress();
             FlashMessages::displayAllMessages();
+            self::showConfirmAddress();
         } else {
             showOrderedItems();
             echo '<div style="width: 50%; margin: auto; min-width: 400px">';
@@ -1028,7 +1029,7 @@ function showUsersDataInTable($name, $surname, $email)
 function showUsersDataInTableAsAdmin($editedUser)
 {
     $_SESSION["edited_user"] = $editedUser;
-    echo ' <div class="row">
+    echo '<div style="width: 50%; margin: auto; min-width: 300px"> <div class="row">
             <label>Jméno: (*)</label>
             <input name="nameEdit" type="text" value="' . $editedUser["name"] . '">
         </div>
@@ -1044,7 +1045,7 @@ function showUsersDataInTableAsAdmin($editedUser)
 
 function showEmptyAddressForm()
 {
-    echo '<div class="row">
+    echo '<div style="width: 50%; margin: auto; min-width: 300px"><div class="row">
             <label>Země: (*)</label>
             <input style="min-width: 100px" name="country" type="text">
         </div>

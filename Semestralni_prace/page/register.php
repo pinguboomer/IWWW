@@ -1,12 +1,8 @@
 <?php
-
-$validation["username"] = array();
-
 if ($_POST) {
     if (empty($_POST["name"]) || empty($_POST["surname"]) ||
         empty($_POST["emailRegister"]) || empty($_POST["passwordRegister"])) {
-        $validation["username"] = "Špatně vyplněné údaje";
-        print_r($validation);
+        echo '<div class="errorLogs">Špatně vyplněné údaje!</div>';
     }
     else {
         $controller = new BlogPostController();
@@ -15,10 +11,10 @@ if ($_POST) {
         $email = $_POST["emailRegister"];
         $passwordRegister = password_hash($_POST["passwordRegister"], PASSWORD_BCRYPT);
         if($controller->checkUniqueEmail($email) != null){
-            echo "Uživatel již existuje";
+            echo '<div class="errorLogs">Uživatel již existuje!</div>';
         } else {
             $controller->addUser($name, $surname, $email, $passwordRegister);
-            echo "Registrace úspěšná!";
+            echo '<div class="errorLogs">Registrace úspěšná!</div>';
         }
     }
 }
@@ -28,39 +24,23 @@ if ($_POST) {
     <form action="/index.php?page=register" method="post">
         <div class="row">
             <label>Jméno: (*)</label>
-            <input name="name" type="text">
+            <input name="name" type="text" id="name_reg">
         </div>
         <div class="row">
             <label>Přijmení: (*)</label>
-            <input name="surname" type="text">
+            <input name="surname" type="text" id="surname_reg">
         </div>
         <div class="row">
             <label>Email: (*)</label>
-            <input name="emailRegister" type="email">
+            <input name="emailRegister" type="email" id="email_reg">
         </div>
         <div class="row">
             <label>Heslo: (*)</label>
-            <input name="passwordRegister" type="password">
+            <input name="passwordRegister" type="password" id="password_reg">
         </div>
         <div class="row">
             <label></label>
-            <input name="submitRegister" type="submit">
+            <input name="submitRegister" type="submit" value="Registrovat">
         </div>
     </form>
 </section>
-
-<script>
-    const inputFieldToValidate = document.getElementsByClassName("validate")
-    for(const input of inputFieldToValidate){
-        input.addEventListener("keyup", function (e){
-            const value = e.target.value;
-            if(value.length < 5){
-                e.target.classList.add("error");
-                e.target.classList.remove("valid");
-            } else {
-                e.target.classList.remove("error");
-                e.target.classList.add("valid");
-            }
-        });
-    }
-</script>

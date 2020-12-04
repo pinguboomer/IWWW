@@ -9,7 +9,7 @@ class FlashMessages
             foreach ($_SESSION["flash_messages"] as $key => $flash_message) {
                 $level = $flash_message["level"];
                 $message = $flash_message["message"];
-                echo "$message";
+                echo '<div class="errorLogs">'. $message .'</div>';
                 unset($_SESSION["flash_messages"][$key]);
             }
         }

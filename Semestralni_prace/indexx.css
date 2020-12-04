@@ -20,8 +20,12 @@ a {
     font-size: 30px;
 }
 
-
-
+.errorLogs {
+    font-size: 20px;
+    text-align: center;
+    margin: auto;
+    width: 200px;
+}
 /*---------Hlavni content wrapper pro vetsinu stranek----------*/
 .centeredContentWrapper {
     margin: auto;

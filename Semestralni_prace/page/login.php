@@ -1,19 +1,18 @@
 <?php
 if ($_POST) {
     if (empty($_POST["emailLogin"]) || empty($_POST["passwordLogin"])) {
-        $validation["username"] = "Špatně vyplněné údaje";
-        print_r($validation);
+        echo '<div class="errorLogs">Špatně vyplněné údaje!</div>';
     } else {
         $controller = new BlogPostController();
         $emailLogin = $_POST["emailLogin"];
         $passwordLogin = $_POST["passwordLogin"];
         if (!($controller->checkUniqueEmail($emailLogin))) {
-            echo "Uživatel neexistuje!";
+            echo '<div class="errorLogs">Uživatel neexistuje!</div>';
         } else {
             $loggedUser = $controller->logUser($emailLogin);
             $passwordResult = password_verify($passwordLogin, $loggedUser["password"]);
             if(!$passwordResult){
-                echo "Špatné heslo!";
+                echo '<div class="errorLogs">Špatné heslo!</div>';
             }
             else {
                 $_SESSION["logged_user"] = $loggedUser;
@@ -32,16 +31,12 @@ if ($_POST) {
                 $_SESSION["orders"];
                 $_SESSION["cart"];
                 $_SESSION["totalPrice"] = 0;
-                if (isset($_POST["keepLogin"])) {
-                    setcookie("keepLogin", $_POST["keepLogin"], time() + (86400 * 30), "/");
-                }
                 header("Location: /index.php?page=products");
             }
         }
     }
 }
 ?>
-
 <section class="centeredContentWrapper" style="width: 400px">
 <form action="index.php?page=login" method="post">
     <div class="row">
@@ -53,12 +48,8 @@ if ($_POST) {
         <input name="passwordLogin" type="password">
     </div>
     <div class="row">
-        <label>Zůstat přihlášen:</label>
-        <input name="keepLogin" type="checkbox">
-    </div>
-    <div class="row">
         <label></label>
-        <input name="submitLogin"  type="submit">
+        <input name="submitLogin" type="submit" value="Přihlásit">
     </div>
 </form>
 </section>

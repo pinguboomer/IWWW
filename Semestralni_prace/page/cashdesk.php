@@ -12,9 +12,8 @@
             // 2) vyplneni adresy
             if (isset($_GET["action"]) && isset($_POST)) {
                 if ($_GET["action"] == "confirmAddress" && !empty($_POST["completeToTheAddress"])) {
-                    echo '<div style="width: 50%; margin: auto; min-width: 300px">';
+
                     $controller->showConfirmAddress();
-                    echo '</div>';
                 }
                 if ($_GET["action"] == "confirmAddress" && !empty($_POST["backToCart"])) {
                     header("Location: /index.php?page=shoppingCart");
