@@ -1,17 +1,20 @@
 <section class="centeredContentWrapper">
     <?php
-    $controller = new BlogPostController();
+    $controller = new MainController();
+    $shop_controller = new ShopController();
+
     $controller->checkIsLogged();
+
     if (isset($_GET["action"])) {
         if ($_GET["action"] == "add" && !empty($_GET["id"])) {
-            $controller->addItemToCart($_GET["id"]);
+            $shop_controller->addItemToCart($_GET["id"]);
         }
         if ($_GET["action"] == "remove" && !empty($_GET["id"])) {
-            $controller->removeItemFromCart($_GET["id"]);
+            $shop_controller->removeItemFromCart($_GET["id"]);
         }
 
         if ($_GET["action"] == "delete" && !empty($_GET["id"])) {
-            $controller->deleteItemFromCart($_GET["id"]);
+            $shop_controller->deleteItemFromCart($_GET["id"]);
         }
     }
     if (isset($_SESSION["cart"])) {
@@ -21,7 +24,7 @@
 <h3><a href="/index.php?page=products" class="payment-button">Pokračovat v nákupu</a></h3>
 </div>';
         } else {
-            $controller->getItemsToCart();
+            $shop_controller->getItemsToCart();
             echo '<h3><a href="/index.php?page=cashdesk" class="payment-button">Přejít k platbě</a></h3>';
         }
     } else {

@@ -5,15 +5,16 @@ if ($_POST) {
         echo '<div class="errorLogs">Špatně vyplněné údaje!</div>';
     }
     else {
-        $controller = new BlogPostController();
+        $controller = new MainController();
+        $user_controller = new UserController();
         $name = $_POST["name"];
         $surname = $_POST["surname"];
         $email = $_POST["emailRegister"];
         $passwordRegister = password_hash($_POST["passwordRegister"], PASSWORD_BCRYPT);
-        if($controller->checkUniqueEmail($email) != null){
+        if($user_controller->checkUniqueEmail($email) != null){
             echo '<div class="errorLogs">Uživatel již existuje!</div>';
         } else {
-            $controller->addUser($name, $surname, $email, $passwordRegister);
+            $user_controller->addUser($name, $surname, $email, $passwordRegister);
             echo '<div class="errorLogs">Registrace úspěšná!</div>';
         }
     }

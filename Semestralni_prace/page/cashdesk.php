@@ -1,6 +1,6 @@
 <section class="centeredContentWrapper" style="width: 50%">
     <?php
-    $controller = new BlogPostController();
+    $controller = new MainController();
     $controller->checkIsLogged();
     if (isset($_SESSION["cart"])) {
         if (empty($_SESSION["cart"])) {

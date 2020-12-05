@@ -1,6 +1,8 @@
 <section class="centeredContentWrapper" style="50%">
     <?php
-    $controller = new BlogPostController();
+    $controller = new MainController();
+    $admin_controller = new AdminController();
+    $shop_controller = new ShopController();
     $controller->checkIsLogged();
     $_SESSION["orders"] = $controller->getOrdersByUser();
     if ($_SESSION["role"] == 2) {
@@ -8,10 +10,10 @@
         // adminova sprava objednavek
         if (isset($_GET["action"]) && isset($_GET["id"])) {
             if ($_GET["action"] == "editOrdersByAdmin" && !empty($_GET["id"])) {
-                $_SESSION["orders"] = $controller->getOrdersByUserId($_GET["id"]);
+                $_SESSION["orders"] = $admin_controller->getOrdersByUserId($_GET["id"]);
                 $controller->getOrders($_GET["id"]);
             } else if ($_GET["action"] == "delete" && !empty($_GET["id"])) {
-                $controller->deleteOrder($_GET["id"]);
+                $admin_controller->deleteOrder($_GET["id"]);
             }
         }
     }
@@ -21,7 +23,7 @@
 
             // detail objednavky
             if ($_GET["action"] == "detail" && !empty($_GET["id"])) {
-                $controller->showDetailOfOrder($_GET["id"]);
+                $shop_controller->showDetailOfOrder($_GET["id"]);
             }
         } else if (!($_SESSION["orders"])) {
             echo '<div class="empty_cart">
