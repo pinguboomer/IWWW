@@ -20,8 +20,12 @@ a {
     font-size: 30px;
 }
 
-
-
+.errorLogs {
+    font-size: 20px;
+    text-align: center;
+    margin: auto;
+    width: 200px;
+}
 /*---------Hlavni content wrapper pro vetsinu stranek----------*/
 .centeredContentWrapper {
     margin: auto;
@@ -124,7 +128,6 @@ footer a {
     border-bottom: 5px solid;
     border-image-slice: 0.5;
     border-image-source: radial-gradient(darkblue 80%, black);
-
 }
 
 .row-profile {
@@ -168,12 +171,12 @@ a.default-button{
     transition: 0.3s;
 }
 
-.error {
-    background-color: red;
+.userTable > table{
+    width: 70%;
+    margin:auto;
 }
 
-.valid {
-    background-color: lightgreen;
-}
+
+
 
 

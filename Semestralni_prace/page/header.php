@@ -6,7 +6,6 @@
     </div><div id="log_and_cart">
         <div class="log">
         <?php
-        //TODO: udelat responzivne
         if(isset($_SESSION["isLogged"])){
             if($_SESSION["isLogged"]){
                 echo'              

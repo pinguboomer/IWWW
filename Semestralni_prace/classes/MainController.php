@@ -151,13 +151,14 @@ class MainController
     public function getOrders($id)
     {
         echo '<table class="shopcarttable">
+<thead>
 <tr><th>Číslo objednávky</th>
 <th>Objednáno dne</th>
 <th>Zaplaceno částkou</th>';
         if ($_SESSION["role"] == 2) {
-            echo '<th></th><th></th></tr>';
+            echo '<th></th><th></th></tr></thead>';
         } else {
-            echo '<th></th></tr>';
+            echo '<th></th></tr></thead>';
         }
         if ($id == -1) {
             $user = EshopPostRepository::getUserByEmail($_SESSION["email"]);
@@ -167,10 +168,10 @@ class MainController
         $orderId = EshopPostRepository::getOrdersByUserId($user["id_user"]);
         foreach ($orderId as $k => $value) {
             $order = EshopPostRepository::getOrderById($orderId[$k]["id_order"]);
-            echo '<tr><td>
+            echo '<tr><td data-label="Číslo objednávky">
                 <h3> ' . $order["id_order"] . '</h3></td>
-                <td><h3>' . $order["date_of_order"] . '</h3></td>
-                <td><h3>' . $order["total_price"] . ' Kč</h3></td>
+                <td data-label="Objednáno dne"><h3>' . $order["date_of_order"] . '</h3></td>
+                <td data-label="Zaplaceno částkou"><h3>' . $order["total_price"] . ' Kč</h3></td>
             <td><h3><a href="/index.php?page=orders&action=detail&id=' . $orderId[$k]["id_order"] . '
 " class="payment-button" >Detail objednávky</a></h3></td>';
             if ($_SESSION["role"] == 2) {
@@ -336,11 +337,11 @@ function showAddressInDetailOrder($address)
 
 function showOrderedItems()
 {
-    echo '<table class="shopcarttable"><tr>
+    echo '<table class="shopcarttable"><thead><tr>
 <th colspan="2">Produkt</th>
 <th>Cena za kus</th>
 <th>Počet kusů v košíku</th>
-<th>Celková cena</th></tr>';
+<th>Celková cena</th></tr></thead>';
     $_SESSION["totalPrice"] = 0;
     foreach ($_SESSION["cart"] as $key => $value) {
         $item = EshopPostRepository::getItemById($key);
@@ -350,11 +351,11 @@ function showOrderedItems()
 <img src="' . $item["image"] . '" alt="' . $item["name"] . '" width="40px" height="40px"></td>
 <td>
 ' . $item["name"] . '</td>
-<td>
+<td data-label="Cena za kus">
 ' . $item["price"] . ' Kč</td>
-<td>
+<td data-label="Počet">
 ' . ($value["quantity"]) . '</td>
-<td>
+<td data-label="Celková cena">
 ' . ($value["quantity"] * $item["price"]) . ' Kč</td></tr>';
     }
     echo '<tr><td colspan="3" style="border-bottom-color:transparent">Celkem:</td>

@@ -1,4 +1,4 @@
-<section class="centeredContentWrapper">
+<section class="centeredContentWrapper" style="width: 80%">
     <?php
     $controller = new MainController();
     $shop_controller = new ShopController();

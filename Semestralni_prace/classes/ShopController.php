@@ -4,10 +4,10 @@ class ShopController {
 
     public function showDetailOfOrder($id)
     {
-        echo '<table class="shopcarttable"><tr>
+        echo '<table class="shopcarttable"><thead><tr>
 <th colspan="2">Produkt</th>
 <th>Počet kusů</th>
-<th>Celková cena</th></tr>';
+<th>Celková cena</th></tr></thead>';
         $order = EshopPostRepository::getOrderById($id);
         $item = EshopPostRepository::getItemsByOrderId($order["id_order"]);
         $addressId = EshopPostRepository::getAddressIdByOrderId($order["id_order"]);
@@ -19,8 +19,8 @@ class ShopController {
 <img src="' . $item[$key]["image"] . '" alt="' . $item[$key]["name"] . '" width="40px" height="40px"></a></td>
 <td><a id="a_in_cart" href="/index.php?page=products&action=detail&id= ' . $item[$key]["id_item"] . '">
 <h3>' . $item[$key]["name"] . '</h3></a></td>
-<td><h3>' . $item[$key]["quantity"] . '</h3></td>
-<td><h3>' . $item[$key]["price"] . '</h3></td></tr>';
+<td data-label="Počet"><h3>' . $item[$key]["quantity"] . '</h3></td>
+<td data-label="Cena"><h3>' . $item[$key]["price"] . '</h3></td></tr>';
         }
         echo '</table><div style="text-align: center">';
         echo '<div style="width: 50%; margin: auto"><h3>Celková cena: ' . $order["total_price"] . ' Kč</h3>';
@@ -172,7 +172,7 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
         $item = EshopPostRepository::getOneById($id);
         if (!empty($item)) {
             echo '<div class="product">
-<img src="' . $item["image"] . '" alt="' . $item["name"] . '" width="400" height="400">
+<img src="' . $item["image"] . '" alt="' . $item["name"] . '">
 <div class="product_info">
 <h1 class="product_name">' . $item["name"] . '</h1>
 <div class="borders_top_and_down">
@@ -235,13 +235,14 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
     public function getItemsToCart()
     {
         echo '<table class="shopcarttable"><tr>
+<thead>
 <th colspan="2">Produkt</th>
 <th>Cena za kus</th>
 <th>Počet kusů v košíku</th>
 <th>Celková cena</th>
 <th></th>
 <th></th>
-<th></th></tr>';
+<th></th></thead></tr>';
         $_SESSION["totalPrice"] = 0;
         $_SESSION["totalQuantity"] = 0;
         foreach ($_SESSION["cart"] as $key => $value) {
@@ -255,11 +256,11 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
 <td>
 <a id="a_in_cart" href="/index.php?page=products&action=detail&id= ' . $item["id_item"] . '" >
 ' . $item["name"] . '</a></td>
-<td>
+<td data-label="Cena za kus">
 ' . $item["price"] . ' Kč</td>
-<td>
+<td data-label="Počet kusů v košíku">
 ' . ($value["quantity"]) . '</td>
-<td>
+<td data-label="Celková cena">
 ' . ($value["quantity"] * $item["price"]) . ' Kč</td>
 <td>
 <a href="/index.php?page=shoppingCart&action=add&id=' . $item["id_item"] . '" class="cart-buttonAdd">

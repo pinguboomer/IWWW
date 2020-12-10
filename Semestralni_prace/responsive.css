@@ -1,3 +1,97 @@
+@media (max-width: 1120px){
+
+    .product {
+        display:block;
+        text-align: center;
+    }
+
+    .product > img{
+        width:200px;
+        height:200px;
+    }
+
+    .product_info {
+        margin-left: 10px;
+        width: 100%;
+    }
+
+    .product_name {
+        font-size: 50px;
+    }
+
+    .product_price {
+        padding-left: 10px;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    .product_quantity {
+        margin-left: 0;
+        display:block;
+    }
+
+    .product input[type="number"]{
+        width: 10%;
+    }
+
+    .product input[type="submit"]{
+        width: 20%;
+        min-width: 100px;
+    }
+
+}
+
+@media (max-width: 1050px) {
+    /* inspirovane od: https://codepen.io/AllThingsSmitty/pen/MyqmdM?editors=1100 */
+    table {
+        border: 0;
+        width: 100%;
+    }
+
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
+
 @media (max-width: 1000px) {
     .centeredContentWrapper {
         width: 100%;
@@ -27,14 +121,14 @@
     }
 }
 
-@media (max-width: 885px){
+@media (max-width: 885px) {
     .logheader {
         font-size: 0.7em;
     }
 }
 
-@media (max-width: 830px){
-    .pageHeading{
+@media (max-width: 830px) {
+    .pageHeading {
         display: none;
     }
 
@@ -62,7 +156,7 @@
         width: 100%;
     }
 
-    .categoryMenu{
+    .categoryMenu {
         width: 100%;
         border: none;
     }
@@ -71,13 +165,19 @@
         width: 100%;
         margin: auto;
     }
+
+    .sorting_radios {
+        margin: auto;
+        justify-content: center;
+    }
 }
 
-@media (max-width: 570px){
+@media (max-width: 570px) {
     .row {
         display: block;
     }
-    .pageHeading{
+
+    .pageHeading {
         display: none;
     }
 
@@ -117,30 +217,30 @@
         display: none;
     }
 
-    .categoryMenu{
+    .categoryMenu {
         padding-top: 40px;
         width: 100%;
     }
 
-    a.category_button{
-        color:white;
+    a.category_button {
+        color: white;
         margin-top: 10px;
-        display:block;
+        display: block;
         width: 100%;
     }
 }
 
 @media (max-width: 350px) {
-    .log a > img{
-        margin-top:10px;
+    .log a > img {
+        margin-top: 10px;
         text-align: center;
         width: 40px;
         height: 40px;
         cursor: pointer;
     }
 
-    .logout a > img{
-        margin-top:10px;
+    .logout a > img {
+        margin-top: 10px;
         text-align: center;
         width: 40px;
         height: 40px;
@@ -151,10 +251,9 @@
         margin-top: 10px;
         width: 10%;
         min-width: 170px;
-        display:flex;
+        display: flex;
     }
 }
-
 
 
 

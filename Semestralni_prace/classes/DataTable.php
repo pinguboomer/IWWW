@@ -21,38 +21,38 @@ class DataTable
     public function renderUsers()
     {
         echo '<table>';
-        echo '<tr>';
+        echo '<thead><tr>';
         foreach ($this->columns as $key => $value){
             echo '<th>' . $value . '</th>';
         }
-        echo '</tr>';
+        echo '</thead><tbody></tr>';
         foreach ($this->dataSet as $row) {
             echo '<tr>';
             foreach ($this->columns as $key => $value){
-                echo '<td>' . $row[$key] . '</td>';
+                echo '<td data-label=' . $value . '>' . $row[$key] . '</td>';
             }
             echo '<td>
 <form action="/index.php?page=myProfile&action=editAsAdmin&id='.$row["id_user"].'" method="post">
-<input name="submitEditUserByAdmin" type="submit" value="Upravit údaje" style="width:auto"></form></td>
+<input name="submitEditUserByAdmin" type="submit" value="Údaje" style="width:90%"></form></td>
 <td><form action="/index.php?page=orders&action=editOrdersByAdmin&id='.$row["id_user"].'" method="post">
-<input name="submitEditUserByAdmin" type="submit" value="Spravovat objednávky" style="width:auto">
+<input name="submitEditUserByAdmin" type="submit" value="Objednávky" style="width:90%">
 </form></td>';
             echo '</tr>';
             }
-        echo '</table>';
+        echo '</tbody></table>';
     }
     public function renderProducts()
     {
-        echo '<table>';
-        echo '<tr>';
+        echo '<table style="margin: auto">';
+        echo '<thead><tr>';
         foreach ($this->columns as $key => $value){
             echo '<th>' . $value . '</th>';
         }
-        echo '</tr>';
+        echo '</tr></thead>';
         foreach ($this->dataSet as $row) {
             echo '<tr>';
             foreach ($this->columns as $key => $value){
-                echo '<td>' . $row[$key] . '</td>';
+                echo '<td data-label=' . $value . '>' . $row[$key] . '</td>';
             }
             echo '<td>
 <form action="/index.php?page=itemsList&action=editAsAdmin&id='.$row["id_item"].'" method="post">

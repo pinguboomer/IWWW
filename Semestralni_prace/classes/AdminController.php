@@ -152,7 +152,6 @@ class AdminController {
         $address = EshopPostRepository::getAddressIdByOrderId($id);
         EshopPostRepository::deleteOrderAddress($id);
         EshopPostRepository::deleteObjednavka($id);
-        EshopPostRepository::deleteAddress($address["id_address"]);
         header("Location: /index.php?page=usersList");
     }
 

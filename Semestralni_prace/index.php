@@ -12,13 +12,13 @@ ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu 
 <head>
     <meta charset="UTF-8">
     <title>Fotbal Shop</title>
-    <link rel="stylesheet" href="headeer.css">
-    <link rel="stylesheet" href="indexx.css">
-    <link rel="stylesheet" href="product.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="products.css">
     <link rel="stylesheet" href="cart.css">
     <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="menu.css">
-    <link rel="stylesheet" href="formm.css">
+    <link rel="stylesheet" href="form.css">
     <link rel="stylesheet" href="print.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.png">
@@ -27,7 +27,7 @@ ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu 
 <?php
 include "./page/header.php";
 include "menu.php";
-FlashMessages::displayAllMessages(); // zobrazuje chybove hlasky TODO: predelat do lepsi podoby
+FlashMessages::displayAllMessages();
 $_SESSION["sorted_by"] = "none";
 if(isset($_GET["page"])) {
    if(preg_match("/^[a-z-A-Z-0-9-\.]+$/", $_GET["page"])) {

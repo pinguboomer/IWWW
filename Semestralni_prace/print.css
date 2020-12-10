@@ -1,8 +1,14 @@
 @media print {
-    #menu, #hero, footer {
+    #menu, footer, #log_and_cart, .logout, .sorting_radios {
         display: none;
     }
     .blogPostPreview > img {
         width: 100px;
+    }
+
+    .pageHeading {
+        color: black;
+        display: block;
+        text-shadow: none;
     }
 }

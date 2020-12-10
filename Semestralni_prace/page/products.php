@@ -30,9 +30,7 @@ if (isset($_GET["action"])) {
     echo '<div id="blogPostList" class="centeredContentWrapper">';
     $shop_controller->showSortedItems(-1);
 }
-?>
-</nav>
-</div>
-</div>
-</section>
+echo '</section>';
+
+
 

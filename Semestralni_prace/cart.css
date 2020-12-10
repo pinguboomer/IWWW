@@ -1,6 +1,7 @@
 /*--------------tabulka v kosiku---------*/
 
 table.shopcarttable {
+    width: 90%;
     margin:auto;
     color: white;
 }
