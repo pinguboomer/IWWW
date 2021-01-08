@@ -14,7 +14,7 @@ if ($_POST) {
         if($user_controller->checkUniqueEmail($email) != null){
             echo '<div class="errorLogs">Uživatel již existuje!</div>';
         } else {
-            $user_controller->addUser($name, $surname, $email, $passwordRegister);
+            $user_controller->addUser($name, $surname, $email, $passwordRegister, 1);
             echo '<div class="errorLogs">Registrace úspěšná!</div>';
         }
     }

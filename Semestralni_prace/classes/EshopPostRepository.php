@@ -27,7 +27,7 @@ class EshopPostRepository
     public static function getAllItemsSortedBySold($limit)
     {
         $conn = Connection::getPdoInstance();
-        $stmt = $conn->prepare("SELECT * FROM item ORDER BY sold DESC limit $limit");
+        $stmt = $conn->prepare("SELECT * FROM item ORDER BY number_of_sold DESC limit $limit");
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -72,7 +72,7 @@ class EshopPostRepository
     public static function getRoleByUserId($id_user)
     {
         $conn = Connection::getPdoInstance();
-        $stmt = $conn->prepare("SELECT * FROM user_role WHERE id_user = :id_user");
+        $stmt = $conn->prepare("SELECT * FROM user_in_shop WHERE id_user = :id_user");
         $stmt->bindParam(":id_user", $id_user);
         $stmt->execute();
         return $stmt->fetch();
@@ -132,7 +132,7 @@ class EshopPostRepository
     {
         $conn = Connection::getPdoInstance();
         $stmt = $conn->prepare("SELECT id_order
-         FROM objednavka WHERE total_price = :totalPrice AND typ_platby = :zpusob_platby
+         FROM order_in_shop WHERE total_price = :totalPrice AND typ_platby = :zpusob_platby
           AND typ_dodani =:zpusob_dodani");
         $stmt->bindParam(":totalPrice", $totalPrice);
         $stmt->bindParam(":zpusob_platby", $zpusob_platby);
@@ -162,7 +162,7 @@ class EshopPostRepository
     public static function getOrderById($id_order)
     {
         $conn = Connection::getPdoInstance();
-        $stmt = $conn->prepare("SELECT * FROM objednavka WHERE id_order = :id_order");
+        $stmt = $conn->prepare("SELECT * FROM order_in_shop WHERE id_order = :id_order");
         $stmt->bindParam(":id_order", $id_order);
         $stmt->execute();
         return $stmt->fetch();
@@ -244,26 +244,16 @@ VALUES (:pathToFile, :name, :text, :price, :quantity)";
         return true;
     }
 
-    public static function insertUser($name, $surname, $email, $password)
+    public static function insertUser($name, $surname, $email, $password, $role)
     {
         $conn = Connection::getPdoInstance();
-        $stmt = $conn->prepare("INSERT INTO user_in_shop (name, surname, email, password)
- VALUES (:name,:surname, :email, :password)");
+        $stmt = $conn->prepare("INSERT INTO user_in_shop (name, surname, email, password, role)
+ VALUES (:name,:surname, :email, :password, :role)");
         $stmt->bindParam(":name", $name);
         $stmt->bindParam(":surname", $surname);
         $stmt->bindParam(":email", $email);
         $stmt->bindParam(":password", $password);
-        $stmt->execute();
-        return true;
-    }
-
-    public static function insertUserRole($email)
-    {
-        $conn = Connection::getPdoInstance();
-        $id_array = self::getUserByEmail($email);
-        $id_user = $id_array["id_user"];
-        $stmt = $conn->prepare("INSERT INTO user_role (id_user, id_role)
- VALUES ($id_user,1)");
+        $stmt->bindParam(":role", $role);
         $stmt->execute();
         return true;
     }
@@ -296,7 +286,7 @@ VALUES (:pathToFile, :name, :text, :price, :quantity)";
     public static function insertOrder($totalPrice, $zpusob_platby, $zpusob_dodani, $date)
     {
         $conn = Connection::getPdoInstance();
-        $stmt = $conn->prepare("INSERT INTO objednavka (total_price, typ_platby,
+        $stmt = $conn->prepare("INSERT INTO order_in_shop (total_price, typ_platby,
  typ_dodani, date_of_order)
  VALUES (:totalPrice,:zpusob_platby, :zpusob_dodani, :date)");
         $stmt->bindParam(":totalPrice", $totalPrice);
@@ -439,11 +429,22 @@ VALUES (:pathToFile, :name, :text, :price, :quantity)";
     public static function updateItem($id_item, $new_quantity, $sold)
     {
         $conn = Connection::getPdoInstance();
-        $sql = "UPDATE item SET quantity = :new_quantity, sold = :sold WHERE id_item = :id";
+        $sql = "UPDATE item SET quantity = :new_quantity, number_of_sold = :sold WHERE id_item = :id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":id", $id_item);
         $stmt->bindParam(":new_quantity", $new_quantity);
         $stmt->bindParam(":sold", $sold);
+        $stmt->execute();
+        return true;
+    }
+
+    public static function executeOrder($id, $executed)
+    {
+        $conn = Connection::getPdoInstance();
+        $sql = "UPDATE order_in_shop SET executed = :executed WHERE id_order = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":executed", $executed);
         $stmt->execute();
         return true;
     }
@@ -493,12 +494,14 @@ VALUES (:pathToFile, :name, :text, :price, :quantity)";
     public static function deleteObjednavka($id)
     {
         $conn = Connection::getPdoInstance();
-        $sql = "DELETE FROM objednavka WHERE id_order = :id";
+        $sql = "DELETE FROM order_in_shop WHERE id_order = :id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         return true;
     }
+
+
 
 
 }

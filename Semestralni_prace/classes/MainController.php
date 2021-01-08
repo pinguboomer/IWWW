@@ -150,11 +150,15 @@ class MainController
 
     public function getOrders($id)
     {
-        echo '<table class="shopcarttable">
+        echo '<div class="cbSortOrders"><label for="myCheck">Zobrazit jen nevyřízené:</label> 
+<input type="checkbox" id="myCheck" onclick="showExecutedFunction()">
+</div>
+<table id="orderTable" class="shopcarttable">
 <thead>
 <tr><th>Číslo objednávky</th>
 <th>Objednáno dne</th>
-<th>Zaplaceno částkou</th>';
+<th>Zaplaceno částkou</th>
+<th>Stav</th>';
         if ($_SESSION["role"] == 2) {
             echo '<th></th><th></th></tr></thead>';
         } else {
@@ -171,15 +175,19 @@ class MainController
             echo '<tr><td data-label="Číslo objednávky">
                 <h3> ' . $order["id_order"] . '</h3></td>
                 <td data-label="Objednáno dne"><h3>' . $order["date_of_order"] . '</h3></td>
-                <td data-label="Zaplaceno částkou"><h3>' . $order["total_price"] . ' Kč</h3></td>
-            <td><h3><a href="/index.php?page=orders&action=detail&id=' . $orderId[$k]["id_order"] . '
-" class="payment-button" >Detail objednávky</a></h3></td>';
-            if ($_SESSION["role"] == 2) {
-                echo '<td><h3><a href="/index.php?page=orders&action=delete&id=' . $orderId[$k]["id_order"] . '
-" class="payment-button" >Odstranit objednávku</a></h3></td></tr>';
+                <td data-label="Zaplaceno částkou"><h3>' . $order["total_price"] . ' Kč</h3></td>';
+                if($order["executed"] == 1){
+                echo '<td data-label="Stav"><h3>Vyřízeno</h3></td>';
             } else {
-                echo '</tr>';
+                if ($_SESSION["role"] == 2) {
+                    echo '<td><h3><a href="/index.php?page=orders&action=execute&id=' . $orderId[$k]["id_order"] . '
+" class="payment-button" style="background-color: maroon" >Označit za vyřízenou</a></h3></td>';
+                } else {
+                    echo '<td data-label="Stav"><h3>Čeká na vyřízení</h3></td>';
+                }
             }
+            echo '<td><h3><a href="/index.php?page=orders&action=detail&id=' . $orderId[$k]["id_order"] . '
+" class="payment-button" >Detail objednávky</a></h3></td></tr>';
         }
         echo '</table>';
     }
@@ -419,4 +427,31 @@ function showProduct($item)
 
 ?>
 
+<script>
+    function showExecutedFunction() {
+        var checkBox = document.getElementById("myCheck");
+        var table, tr, td, i, txtValue;
+        table = document.getElementById("orderTable");
+        tr = table.getElementsByTagName("tr");
+        if (checkBox.checked == true){
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    if (td.textContent == "Čeká na vyřízení" || td.textContent == "Označit za vyřízenou") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+        }
+        } else {
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                        tr[i].style.display = "";
+                }
+            }
+        }
+    }
+</script>
 

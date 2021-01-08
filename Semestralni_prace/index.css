@@ -176,6 +176,28 @@ a.default-button{
     margin:auto;
 }
 
+/*-------------------ORDERS-----------------*/
+.cbSortOrders {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    font-size: 30px;
+}
+
+.cbSortOrders > label{
+    cursor: pointer;
+    width:auto;
+}
+
+.cbSortOrders input[type="checkbox"]{
+    margin-left: 20px;
+    margin-top: 12px;
+    width: 30px;
+    transform: scale(1.7);
+    cursor: pointer;
+}
 
 
 

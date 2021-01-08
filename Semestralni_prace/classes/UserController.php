@@ -28,10 +28,9 @@ class UserController
         return EshopPostRepository::checkUniqueEmail($email);
     }
 
-    public function addUser($name, $surname, $email, $password)
+    public function addUser($name, $surname, $email, $password, $role)
     {
-        EshopPostRepository::insertUser($name, $surname, $email, $password);
-        EshopPostRepository::insertUserRole($email);
+        EshopPostRepository::insertUser($name, $surname, $email, $password, $role);
     }
 
     public function logUser($emailLogin)

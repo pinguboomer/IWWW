@@ -145,14 +145,10 @@ class AdminController {
         return true;
     }
 
-    public function deleteOrder($id)
+    public function executeOrder($id)
     {
-        EshopPostRepository::deleteUserOrder($id);
-        EshopPostRepository::deleteOrderItem($id);
-        $address = EshopPostRepository::getAddressIdByOrderId($id);
-        EshopPostRepository::deleteOrderAddress($id);
-        EshopPostRepository::deleteObjednavka($id);
-        header("Location: /index.php?page=usersList");
+        EshopPostRepository::executeOrder($id, 1);
+        header('Location: /index.php?page=usersList');
     }
 
     public function completeAddNewItem()

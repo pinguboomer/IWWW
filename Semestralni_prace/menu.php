@@ -1,5 +1,4 @@
 <?php
-//TODO: Zustat prihlasen
 echo '<div id="menu">';
    echo '<label for="hamburger">&#9776;</label>
     <input type="checkbox" id="hamburger"/>

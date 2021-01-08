@@ -28,7 +28,12 @@ class ShopController {
         echo '<h3>Způsob dodání: ' . $order["typ_dodani"] . '</h3>';
         echo '<div class="borders_top_and_down">';
         showAddressInDetailOrder($address);
-        echo '</div><h3><a href="/index.php?page=orders" class="default-button" >Zpět</a></h3></div>';
+        if($_SESSION["role"] == 2) {
+            echo '</div><h3><a href="/index.php?page=usersList"
+  class="default-button" >Zpět</a></h3></div>';
+        } else {
+            echo '</div><h3><a href="/index.php?page=orders" class="default-button" >Zpět</a></h3></div>';
+        }
     }
 
     public function showCategories()

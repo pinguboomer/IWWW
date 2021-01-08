@@ -12,8 +12,8 @@
             if ($_GET["action"] == "editOrdersByAdmin" && !empty($_GET["id"])) {
                 $_SESSION["orders"] = $admin_controller->getOrdersByUserId($_GET["id"]);
                 $controller->getOrders($_GET["id"]);
-            } else if ($_GET["action"] == "delete" && !empty($_GET["id"])) {
-                $admin_controller->deleteOrder($_GET["id"]);
+            } else if ($_GET["action"] == "execute" && !empty($_GET["id"])) {
+                $admin_controller->executeOrder($_GET["id"]);
             }
         }
     }

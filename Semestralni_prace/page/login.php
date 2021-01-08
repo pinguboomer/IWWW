@@ -19,7 +19,7 @@ if ($_POST) {
                 $_SESSION["logged_user"] = $loggedUser;
                 $_SESSION["email"] = $_SESSION["logged_user"]["email"];
                 $loggedRole = $user_controller->getRoleByUserId($loggedUser["id_user"]);
-                $_SESSION["role"] = $loggedRole["id_role"];
+                $_SESSION["role"] = $loggedRole["role"];
                 $_SESSION["isLogged"] = true;
                 $_SESSION["loginTime"] = date("h:i:sa");
                 $address = $user_controller->getAddressByEmail($_SESSION["email"]);

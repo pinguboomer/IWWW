@@ -5,7 +5,6 @@ function __autoload($class){ //zavola se pokazdy, kdyz najde novou tridu a nacte
 session_start();
 ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu a pak az na obrazovku
 
-//TODO: dodelat responzivitu
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -44,6 +43,7 @@ if(isset($_GET["page"])) {
     include "./page/main.php";
 }
 }
+//TODO: stav objednavky misto odstranit objednavku, a vymazat sold a role, prejmenovat objednavka
 include "footer.php";
 ?>
 </body>
