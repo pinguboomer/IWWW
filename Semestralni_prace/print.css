@@ -1,5 +1,5 @@
 @media print {
-    #menu, footer, #log_and_cart, .logout, .sorting_radios {
+    #menu, footer, #log_and_cart, .logout, .sorting_radios,  .categoryMenu{
         display: none;
     }
     .blogPostPreview > img {

@@ -32,9 +32,8 @@
             header("Location: /index.php?page=MyProfile");
         }
     } else {
-
         // zobrazeni adresy uzivatele
-        $_SESSION["address"] = $user_controller->getAddressByEmail($_SESSION["email"]);
+       // $_SESSION["address"] = $user_controller->getAddressByEmail($_SESSION["logged_user"]["email"]);
         echo '<div class="borders_top_and_down">';
         $user_controller->showAddress();
         echo '</div><div id="profile_buttons">

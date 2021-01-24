@@ -5,7 +5,7 @@
     $admin_controller = new AdminController();
     $controller->checkIsLogged();
     if (isset($_GET["action"])) {
-        if ($_SESSION["role"] == 2) {
+        if ($_SESSION["logged_user"]["role"] == 2) {
 
             // editace uzivatele (jen admin)
             if ($_GET["action"] == "editAsAdmin" && !empty($_GET["id"])) {
@@ -29,7 +29,8 @@
 
         // zobrazeni sveho profilu
         $user_controller->showMyProfileInfo();
-echo '<a href="/index.php?page=myProfile&action=edit" class="default-button">Upravit profil</a>';
+        echo '<div id="profile_buttons">
+        <a href="/index.php?page=myProfile&action=edit" class="default-button">Upravit profil</a>';
         if ($_SESSION["UserHasAlreadyAddress"]) {
             echo '<a href="/index.php?page=myAddress" class="default-button">Zobrazit adresu</a>';
         } else {

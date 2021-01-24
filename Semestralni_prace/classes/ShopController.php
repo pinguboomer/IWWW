@@ -4,20 +4,23 @@ class ShopController {
 
     public function showDetailOfOrder($id)
     {
+        $order = OrderRepository::getOrderById($id);
+        if($order == null){
+            return;
+        }
         echo '<table class="shopcarttable"><thead><tr>
 <th colspan="2">Produkt</th>
 <th>Počet kusů</th>
 <th>Celková cena</th></tr></thead>';
-        $order = EshopPostRepository::getOrderById($id);
-        $item = EshopPostRepository::getItemsByOrderId($order["id_order"]);
-        $addressId = EshopPostRepository::getAddressIdByOrderId($order["id_order"]);
-        $address = EshopPostRepository::getAddressById($addressId["id_address"]);
+        $item = OrderRepository::getItemsByOrderId($order["id_order"]);
+        $addressId = OrderRepository::getAddressIdByOrderId($order["id_order"]);
+        $address = UserRepository::getAddressById($addressId["id_address"]);
         foreach ($item as $key => $value) {
             //$it = EshopPostRepository::getItemById($item[$key]["id_item"]);
             echo '<tr><td>
-<a id="a_in_cart" href="/index.php?page=products&action=detail&id= ' . $item[$key]["id_item"] . '">
+<a id="a_in_cart" href="/index.php?page=products&action=detail&id=' . $item[$key]["id_item"] . '">
 <img src="' . $item[$key]["image"] . '" alt="' . $item[$key]["name"] . '" width="40px" height="40px"></a></td>
-<td><a id="a_in_cart" href="/index.php?page=products&action=detail&id= ' . $item[$key]["id_item"] . '">
+<td><a id="a_in_cart" href="/index.php?page=products&action=detail&id=' . $item[$key]["id_item"] . '">
 <h3>' . $item[$key]["name"] . '</h3></a></td>
 <td data-label="Počet"><h3>' . $item[$key]["quantity"] . '</h3></td>
 <td data-label="Cena"><h3>' . $item[$key]["price"] . '</h3></td></tr>';
@@ -28,11 +31,11 @@ class ShopController {
         echo '<h3>Způsob dodání: ' . $order["typ_dodani"] . '</h3>';
         echo '<div class="borders_top_and_down">';
         showAddressInDetailOrder($address);
-        if($_SESSION["role"] == 2) {
+        if($_SESSION["logged_user"]["role"] == 2) {
             echo '</div><h3><a href="/index.php?page=usersList"
   class="default-button" >Zpět</a></h3></div>';
         } else {
-            echo '</div><h3><a href="/index.php?page=orders" class="default-button" >Zpět</a></h3></div>';
+            echo '</div><h3><a href="/index.php?page=orders&user=' . $_SESSION["logged_user"]["id_user"] . '" class="default-button" >Zpět</a></h3></div>';
         }
     }
 
@@ -40,7 +43,7 @@ class ShopController {
     {
         $categories = EshopPostRepository::getAllCategories();
         foreach ($categories as $key => $value) {
-            echo '<a href="/index.php?page=products&action=sort&id=' . $categories[$key]["id_category"] . '" 
+            echo '<a href="/index.php?page=products&action=category&id=' . $categories[$key]["id_category"] . '" 
 class="category_button">' . $categories[$key]["name"] . '</a>';
         }
     }
@@ -49,49 +52,51 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
     {
         $itemsId = null;
         if ($id == -1) {
-            switch ($_SESSION["sorted_by"]) {
-                case "none":
-                    $itemsId = EshopPostRepository::getAllItems();
-                    break;
-                case "nejlevnejsi":
-                    $itemsId = EshopPostRepository::getAllBy("price", "asc");
-                    break;
-                case "nejdrazsi":
-                    $itemsId = EshopPostRepository::getAllBy("price", "desc");
-                    break;
-                case "nejnovejsi":
-                    $itemsId = EshopPostRepository::getAllBy("id_item", "desc");
-                    break;
-                case "nejstarsi":
-                    $itemsId = EshopPostRepository::getAllBy("id_item", "asc");
-                    break;
-                case "nejoblibenejsi":
-                    $itemsId = EshopPostRepository::getAllBy("read_counter", "desc");
-                    break;
+            if(isset($_GET["sorting_by"])) {
+                switch ($_GET["sorting_by"]) {
+                    case "nejlevnejsi":
+                        $itemsId = EshopPostRepository::getAllBy("price", "asc");
+                        break;
+                    case "nejdrazsi":
+                        $itemsId = EshopPostRepository::getAllBy("price", "desc");
+                        break;
+                    case "nejnovejsi":
+                        $itemsId = EshopPostRepository::getAllBy("id_item", "desc");
+                        break;
+                    case "nejstarsi":
+                        $itemsId = EshopPostRepository::getAllBy("id_item", "asc");
+                        break;
+                    case "nejoblibenejsi":
+                        $itemsId = EshopPostRepository::getAllBy("read_counter", "desc");
+                        break;
+                }
+            } else {
+               $itemsId = EshopPostRepository::getAllItems();
             }
             foreach ($itemsId as $item) {
                 showProduct($item);
             }
         } else {
-            switch ($_SESSION["sorted_by"]) {
-                case "none":
-                    $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "desc");
-                    break;
-                case "nejlevnejsi":
-                    $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "price", "asc");
-                    break;
-                case "nejdrazsi":
-                    $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "price", "desc");
-                    break;
-                case "nejnovejsi":
-                    $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "desc");
-                    break;
-                case "nejstarsi":
-                    $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "asc");
-                    break;
-                case "nejoblibenejsi":
-                    $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "read_counter", "desc");
-                    break;
+            if(isset($_GET["sorting_by"])) {
+                switch ($_GET["sorting_by"]) {
+                    case "nejlevnejsi":
+                        $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "price", "asc");
+                        break;
+                    case "nejdrazsi":
+                        $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "price", "desc");
+                        break;
+                    case "nejnovejsi":
+                        $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "desc");
+                        break;
+                    case "nejstarsi":
+                        $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "asc");
+                        break;
+                    case "nejoblibenejsi":
+                        $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "read_counter", "desc");
+                        break;
+                }
+            } else {
+                $itemsId = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "desc");
             }
             foreach ($itemsId as $item) {
                 showProduct($item);
@@ -101,9 +106,10 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
 
     public function showSortBy()
     {
-        echo '<form action="/index.php?page=products" method="post">
-<div class="sorting_radios">
-<div class="row_sort">
+        echo '<form action="/index.php" method="get">
+            <input type="hidden" name="page" value="products">
+            <div class="sorting_radios">
+            <div class="row_sort">
             <input type="radio" name="sorting_by" id="cheap" value="nejlevnejsi">
             <label for="cheap">Nejlevnější</label>
             </div>
@@ -119,14 +125,16 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
             <input type="radio" name="sorting_by" id="popular" value="nejoblibenejsi">
             <label for="popular">Nejoblíbenější</label>            
             </div>
-            <input type="submit" name="submit_sort" value="Seřadit">
-        </div>';
+            <input type="submit" id="submit" value="Seřadit">
+        </div></form>';
     }
 
     public function showSortByInCategory($id)
     {
 
-        echo '<form action="/index.php?page=products&action=sort&id= ' . $id . '" method="post">
+        echo '<form action="/index.php" method="get">
+            <input type="hidden" name="page" value="products">
+            <input type="hidden" name="action" value="category">
 <div class="sorting_radios">
 <div class="row_sort">
             <input type="radio" name="sorting_by" id="cheap" value="nejlevnejsi">
@@ -143,33 +151,10 @@ class="category_button">' . $categories[$key]["name"] . '</a>';
             <div class="row_sort">
             <input type="radio" name="sorting_by" id="popular" value="nejoblibenejsi">
             <label for="popular">Nejoblíbenější</label>            
-            </div>
-            <input type="submit" name="submit_sort" value="Seřadit">
+            </div>          
+            <input type="hidden" name="id" value="' . $id . '">
+            <input type="submit" value="Seřadit">
         </div>';
-    }
-
-    public function getSortedBy()
-    {
-        if (isset($_POST)) {
-            if (!empty($_POST["sorting_by"])) {
-                switch ($_POST["sorting_by"]) {
-                    case "nejlevnejsi":
-                        $_SESSION["sorted_by"] = "nejlevnejsi";
-                        break;
-                    case "nejdrazsi":
-                        $_SESSION["sorted_by"] = "nejdrazsi";
-                        break;
-                    case "nejnovejsi":
-                        $_SESSION["sorted_by"] = "nejnovejsi";
-                        break;
-                    case "nejoblibenejsi":
-                        $_SESSION["sorted_by"] = "nejoblibenejsi";
-                        break;
-                }
-            } else {
-                $_SESSION["sorted_by"] = "none";
-            }
-        }
     }
 
     public function detail($id)
@@ -309,3 +294,5 @@ Odebrat z košíku</a></td></tr>';
         header("Location: /index.php?page=shoppingCart");
     }
 }
+
+

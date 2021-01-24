@@ -1,11 +1,10 @@
 <section class="centeredContentWrapper" style="width: 80%">
     <?php
     $controller = new MainController();
-    $user_controller = new UserController();
     $admin_controller = new AdminController();
     $controller->checkIsLogged();
     if (isset($_GET["action"])) {
-        if ($_SESSION["role"] == 2) {
+        if ($_SESSION["logged_user"]["role"] == 2) {
             // pridani noveho itemu (pouze admin)
             if ($_GET["action"] == "addItem") {
                 $admin_controller->addNewItem();
@@ -21,10 +20,14 @@
 
         }
     } else {
-        // tabulka itemu + button pridat
-        echo '<a href="/index.php?page=itemsList&action=addItem" 
-class="products_add_edit_buttons">PŘIDAT</a>';
-        $user_controller->listAllInTable();
+        if ($_SESSION["logged_user"]["role"] == 2) {
+            // tabulka itemu + button pridat
+            echo '<a href="/index.php?page=categoriesList" 
+class="products_add_edit_buttons">Seznam kategorií</a>
+<a href="/index.php?page=itemsList&action=addItem" 
+class="products_add_edit_buttons">PŘIDAT NOVÝ PRODUKT</a>';
+            $admin_controller->listAllInTable();
+        }
     }
 
 

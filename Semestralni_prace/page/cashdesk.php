@@ -12,7 +12,6 @@
             // 2) vyplneni adresy
             if (isset($_GET["action"]) && isset($_POST)) {
                 if ($_GET["action"] == "confirmAddress" && !empty($_POST["completeToTheAddress"])) {
-
                     $controller->showConfirmAddress();
                 }
                 if ($_GET["action"] == "confirmAddress" && !empty($_POST["backToCart"])) {

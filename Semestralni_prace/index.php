@@ -12,8 +12,8 @@ ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu 
     <meta charset="UTF-8">
     <title>Fotbal Shop</title>
     <link rel="stylesheet" href="header.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="products.css">
+    <link rel="stylesheet" href="indexx.css">
+    <link rel="stylesheet" href="product.css">
     <link rel="stylesheet" href="cart.css">
     <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="menu.css">
@@ -27,7 +27,6 @@ ob_start(); // pro spravne nacteni stranky, nejdriv se nacte stranka do bufferu 
 include "./page/header.php";
 include "menu.php";
 FlashMessages::displayAllMessages();
-$_SESSION["sorted_by"] = "none";
 if(isset($_GET["page"])) {
    if(preg_match("/^[a-z-A-Z-0-9-\.]+$/", $_GET["page"])) {
         $pathToFile = "./page/" . $_GET["page"] . ".php";
@@ -43,7 +42,6 @@ if(isset($_GET["page"])) {
     include "./page/main.php";
 }
 }
-//TODO: stav objednavky misto odstranit objednavku, a vymazat sold a role, prejmenovat objednavka
 include "footer.php";
 ?>
 </body>

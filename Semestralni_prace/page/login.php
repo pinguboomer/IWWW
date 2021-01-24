@@ -17,14 +17,12 @@ if ($_POST) {
             }
             else {
                 $_SESSION["logged_user"] = $loggedUser;
-                $_SESSION["email"] = $_SESSION["logged_user"]["email"];
-                $loggedRole = $user_controller->getRoleByUserId($loggedUser["id_user"]);
-                $_SESSION["role"] = $loggedRole["role"];
                 $_SESSION["isLogged"] = true;
                 $_SESSION["loginTime"] = date("h:i:sa");
-                $address = $user_controller->getAddressByEmail($_SESSION["email"]);
+                $address = $user_controller->getAddressByEmail($_SESSION["logged_user"]["email"]);
                 if($address != null) {
-                    $_SESSION["address"] = $user_controller->getAddressByEmail($_SESSION["email"]);
+                    $_SESSION["address"] =
+                        $user_controller->getAddressByEmail($_SESSION["logged_user"]["email"]);
                     $_SESSION["UserHasAlreadyAddress"] = true;
                 } else {
                     $_SESSION["UserHasAlreadyAddress"] = false;
@@ -39,7 +37,7 @@ if ($_POST) {
 }
 ?>
 <section class="centeredContentWrapper" style="width: 400px">
-<form action="index.php?page=login" method="post">
+<form action="/index.php?page=login" method="post">
     <div class="row">
         <label>Email:</label>
         <input name="emailLogin" type="email">

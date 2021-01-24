@@ -8,6 +8,7 @@ class MainController
         $isLogged = isset($_SESSION["isLogged"]);
         if (!$isLogged) {
             header("Location: /index.php?page=login");
+            exit;
         }
     }
 
@@ -119,23 +120,23 @@ class MainController
 
     public function completeOrder()
     {
-        EshopPostRepository::insertOrder($_SESSION["totalPrice"],
+        OrderRepository::insertOrder($_SESSION["totalPrice"],
             $_SESSION["zpusob_platby"], $_SESSION["zpusob_dodani"], date("Y-m-d"));
-        EshopPostRepository::insertAddress($_SESSION["order_country"],
+        UserRepository::insertAddress($_SESSION["order_country"],
             $_SESSION["order_city"], $_SESSION["order_street"],
             $_SESSION["order_zipcode"], $_SESSION["order_phone"]);
-        $user = EshopPostRepository::getUserByEmail($_SESSION["email"]);
-        $address = EshopPostRepository::getAddressIdByData($_SESSION["order_country"],
+        $user = UserRepository::getUserByEmail($_SESSION["logged_user"]["email"]);
+        $address = UserRepository::getAddressIdByData($_SESSION["order_country"],
             $_SESSION["order_city"], $_SESSION["order_street"],
             $_SESSION["order_zipcode"], $_SESSION["order_phone"]);
-        $order = EshopPostRepository::getOrderIdByData($_SESSION["totalPrice"],
+        $order = OrderRepository::getOrderIdByData($_SESSION["totalPrice"],
             $_SESSION["zpusob_platby"], $_SESSION["zpusob_dodani"]);
-        EshopPostRepository::insertUserOrder($user["id_user"], $order["id_order"]);
-        EshopPostRepository::insertOrderAddress($order["id_order"], $address["id_address"]);
+        OrderRepository::insertUserOrder($user["id_user"], $order["id_order"]);
+        OrderRepository::insertOrderAddress($order["id_order"], $address["id_address"]);
 
         foreach ($_SESSION["cart"] as $key => $value) {
             $item = EshopPostRepository::getItemById($key);
-            EshopPostRepository::insertOrderItem($order["id_order"], $item["id_item"],
+            OrderRepository::insertOrderItem($order["id_order"], $item["id_item"],
                 $item["name"], $item["image"], $item["price"] * $value["quantity"],
                 $value["quantity"]);
             $new_quantity = $item["quantity"] - $value["quantity"];
@@ -143,35 +144,28 @@ class MainController
         }
         unset($_SESSION["cart"]);
         $_SESSION["totalPrice"] = 0;
-        header("Location: /index.php?page=orders");
+        header('Location: /index.php?page=orders&user='.$_SESSION["logged_user"]["id_user"] . '');
     }
 
     //--------------------------ORDERS----------------------------------------------
 
     public function getOrders($id)
     {
-        echo '<div class="cbSortOrders"><label for="myCheck">Zobrazit jen nevyřízené:</label> 
-<input type="checkbox" id="myCheck" onclick="showExecutedFunction()">
-</div>
-<table id="orderTable" class="shopcarttable">
-<thead>
-<tr><th>Číslo objednávky</th>
-<th>Objednáno dne</th>
-<th>Zaplaceno částkou</th>
-<th>Stav</th>';
-        if ($_SESSION["role"] == 2) {
-            echo '<th></th><th></th></tr></thead>';
-        } else {
-            echo '<th></th></tr></thead>';
-        }
-        if ($id == -1) {
-            $user = EshopPostRepository::getUserByEmail($_SESSION["email"]);
-        } else {
-            $user = EshopPostRepository::getUserById($id);
-        }
-        $orderId = EshopPostRepository::getOrdersByUserId($user["id_user"]);
-        foreach ($orderId as $k => $value) {
-            $order = EshopPostRepository::getOrderById($orderId[$k]["id_order"]);
+        echo '<div class="cbSortOrders">
+        <label for="myCheck">Zobrazit jen nevyřízené:</label> 
+        <input type="checkbox" id="myCheck" onclick="showExecutedFunction()">
+            </div>
+        <table id="orderTable" class="shopcarttable">
+        <thead>
+        <tr><th>Číslo objednávky</th>
+        <th>Objednáno dne</th>
+        <th>Zaplaceno částkou</th>
+        <th>Stav</th><th></th></tr></thead>';
+        // zjistim vsechna id objednavek uzivatele
+        $orders = OrderRepository::getOrdersByUserId($id);
+        foreach ($orders as $key => $value) {
+            // zjistim objednavku podle id objednavky
+            $order = OrderRepository::getOrderById($orders[$key]["id_order"]);
             echo '<tr><td data-label="Číslo objednávky">
                 <h3> ' . $order["id_order"] . '</h3></td>
                 <td data-label="Objednáno dne"><h3>' . $order["date_of_order"] . '</h3></td>
@@ -179,29 +173,43 @@ class MainController
                 if($order["executed"] == 1){
                 echo '<td data-label="Stav"><h3>Vyřízeno</h3></td>';
             } else {
-                if ($_SESSION["role"] == 2) {
-                    echo '<td><h3><a href="/index.php?page=orders&action=execute&id=' . $orderId[$k]["id_order"] . '
+                if ($_SESSION["logged_user"]["role"] == 2) {
+                    echo '<td><h3><a href="/index.php?page=orders&action=execute&id=' . $order["id_order"] . '
 " class="payment-button" style="background-color: maroon" >Označit za vyřízenou</a></h3></td>';
                 } else {
                     echo '<td data-label="Stav"><h3>Čeká na vyřízení</h3></td>';
                 }
             }
-            echo '<td><h3><a href="/index.php?page=orders&action=detail&id=' . $orderId[$k]["id_order"] . '
-" class="payment-button" >Detail objednávky</a></h3></td></tr>';
+            echo '<td><h3>
+<a href="/index.php?page=orders&user=' . $id . '&action=detail&id=' . $order["id_order"] . '"
+ class="payment-button" >Detail objednávky</a></h3></td></tr>';
         }
         echo '</table>';
     }
 
-    public function getOrdersByUser()
+    public function checkOrdersByUser()
     {
-        $user = EshopPostRepository::getUserByEmail($_SESSION["email"]);
-        $orderId = EshopPostRepository::getOrdersByUserId($user["id_user"]);
+        $orderId = OrderRepository::getOrdersByUserId($_GET["user"]);
+
         if (empty($orderId)) {
             return false;
         }
         return true;
     }
 
+    public function checkUserInOrder()
+    {
+        if (isset($_SESSION["logged_user"]["role"])) {
+            if ($_SESSION["logged_user"]["role"] == 2) {
+                return true;
+            } else {
+                if($_GET["user"] == $_SESSION["logged_user"]["id_user"]){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 //--------------------FUNCTIONS----------------------------
@@ -224,8 +232,8 @@ function showUsersDataInTable($name, $surname, $email)
 
 function showUsersDataInTableAsAdmin($editedUser)
 {
-    $_SESSION["edited_user"] = $editedUser;
     echo '<div style="width: 50%; margin: auto; min-width: 300px"> <div class="row">
+  
             <label>Jméno: (*)</label>
             <input name="nameEdit" type="text" value="' . $editedUser["name"] . '">
         </div>
@@ -311,7 +319,7 @@ function showAddressFormWithUsersAddressInOrder()
         </div>
         <div class="row">
             <label>Email:</label>
-            <label>' . $_SESSION["email"] . '</label>
+            <label>' . $_SESSION["logged_user"]["email"] . '</label>
         </div>';
 }
 
@@ -339,7 +347,7 @@ function showAddressInDetailOrder($address)
         </div>
         <div class="row-profile">
             <label>Email:</label>
-            <label>' . $_SESSION["email"] . '</label>
+            <label>' . $_SESSION["logged_user"]["email"] . '</label>
         </div>';
 }
 
@@ -430,7 +438,7 @@ function showProduct($item)
 <script>
     function showExecutedFunction() {
         var checkBox = document.getElementById("myCheck");
-        var table, tr, td, i, txtValue;
+        var table, tr, td, i;
         table = document.getElementById("orderTable");
         tr = table.getElementsByTagName("tr");
         if (checkBox.checked == true){

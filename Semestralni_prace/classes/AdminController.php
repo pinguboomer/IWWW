@@ -2,10 +2,31 @@
 
 class AdminController {
 
+    public function listAllInTable()
+    {
+        $dataTable = new DataTable(EshopPostRepository::getAllItems());
+        $dataTable->addColumn("id_item", "ID");
+        $dataTable->addColumn("name", "Název");
+        $dataTable->addColumn("price", "Cena");
+        $dataTable->addColumn("quantity", "Počet zbývajících kusů");
+        $dataTable->addColumn("read_counter", "Počet zobrazení");
+        $dataTable->addColumn("description", "Popis");
+        $dataTable->renderProducts();
+    }
+
+    public function listAllCategoriesInTable()
+    {
+        $dataTable = new DataTable(EshopPostRepository::getAllCategories());
+        $dataTable->addColumn("id_category", "ID");
+        $dataTable->addColumn("name", "Název");
+        $dataTable->addColumn("description", "Popis");
+        $dataTable->renderCategories();
+    }
+
     public function editProfileAsAdmin($id)
     {
-        echo '<form action="/index.php?page=myProfile&action=completeEditAsAdmin" method="post">';
-        $editedUser = EshopPostRepository::getUserById($id);
+        echo '<form action="/index.php?page=myProfile&action=completeEditAsAdmin&id=' . $id . '" method="post">';
+        $editedUser = UserRepository::getUserById($id);
         showUsersDataInTableAsAdmin($editedUser);
         echo '<div class="row">
             <label></label>
@@ -29,19 +50,20 @@ class AdminController {
             if (empty($_POST["emailEdit"])) {
                 FlashMessages::error("Není vyplněn email");
             }
+            $user = UserRepository::getUserById($_GET["id"]);
             if ($user_controller->checkUniqueEmail($_POST["emailEdit"]) != null &&
-                $_POST["emailEdit"] != $_SESSION["edited_user"]["email"]) {
+                $_POST["emailEdit"] != $user["email"]) {
                 FlashMessages::error("Email je již zabrán!");
             }
             if (FlashMessages::containsError()) {
                 header('Location: /index.php?page=MyProfile&action=editAsAdmin&id='
-                    . $_SESSION["edited_user"]["id_user"] . '');
+                    . $_POST["id_user"]. '');
                 exit;
             } else {
                 $name = htmlspecialchars($_POST["nameEdit"]);
                 $surname = htmlspecialchars($_POST["surnameEdit"]);
                 $email = htmlspecialchars($_POST["emailEdit"]);
-                EshopPostRepository::updateUserById($_SESSION["edited_user"]["id_user"], $name, $surname, $email);
+                UserRepository::updateUserById($_GET["id"], $name, $surname, $email);
                 header("Location: /index.php?page=usersList");
             }
         }
@@ -49,30 +71,30 @@ class AdminController {
 
     public function editProductByAdmin($id)
     {
-        $_SESSION["edited_product"] = EshopPostRepository::getItemById($id);
+        $item = EshopPostRepository::getItemById($id);
         echo '<div class="add_product_form">
         <form action="/index.php?page=itemsList&action=completeEditProduct&id=' . $id . '" method="post" 
         enctype="multipart/form-data">
         <div class="row">
 <label>Název:</label>           
-        <input type="text" name="name" placeholder="Název" value="' . $_SESSION["edited_product"]["name"] . '">
+        <input type="text" name="name" placeholder="Název" value="' . $item["name"] . '">
         </div>  
         <div class="row">
 <label>Obrázek:</label>
         <input type="file" name="newImage" placeholder="Obrázek">
-        <img src="' . $_SESSION["edited_product"]["image"] . '" width="50px" height="50px">
+        <img src="' . $item["image"] . '" width="50px" height="50px">
         </div>
         <div class="row">
 <label>Popis:</label>
-        <textarea name="description" placeholder="popis...">' . $_SESSION["edited_product"]["description"] . '</textarea>
+        <textarea name="description" placeholder="popis...">' . $item["description"] . '</textarea>
         </div>
         <div class="row">
 <label>Cena:</label>
-        <input name="price" type="number" value="' . $_SESSION["edited_product"]["price"] . '" min="0"</input>
+        <input name="price" type="number" value="' . $item["price"] . '" min="0"</input>
         </div>
         <div class="row">
 <label>Počet kusů na skladě:</label>
-        <input name="quantity" type="number" value="' . $_SESSION["edited_product"]["quantity"] . '" min="0" </input>
+        <input name="quantity" type="number" value="' . $item["quantity"] . '" min="0" </input>
         </div>
         <div class="row">
 <label>Kategorie:</label>
@@ -111,7 +133,7 @@ class AdminController {
 
             if (FlashMessages::containsError()) {
                 header('Location: /index.php?page=itemsList&action=editAsAdmin&id=' .
-                    $_SESSION["edited_product"]["id"] . '');
+                    $_GET["id"]. '');
                 exit;
             }
 
@@ -121,33 +143,21 @@ class AdminController {
             }
             if ($isNewImage) {
                 $pathToFile = FileUpload::upload("./img/", "newImage");
-                echo $pathToFile;
+                EshopPostRepository::updateProduct($id, $pathToFile, htmlspecialchars($_POST["name"]),
+                    htmlspecialchars($_POST["description"]),
+                    $_POST["price"], $_POST["quantity"], $_POST["category"]);
             } else {
-                $pathToFile = $_SESSION["edited_product"]["image"];
+                EshopPostRepository::updateProductWithoutPicture($id, htmlspecialchars($_POST["name"]),
+                    htmlspecialchars($_POST["description"]),
+                    $_POST["price"], $_POST["quantity"], $_POST["category"]);
             }
-
-            if (EshopPostRepository::updateProduct($id, $pathToFile, htmlspecialchars($_POST["name"]),
-                htmlspecialchars($_POST["description"]),
-                $_POST["price"], $_POST["quantity"])) {
-                EshopPostRepository::updateItemCategory($id, $_POST["category"]);
-                header("Location: /index.php?page=itemsList");
-            }
-            exit;
+            header("Location: /index.php?page=itemsList");
         }
-    }
-
-    public function getOrdersByUserId($id)
-    {
-        $orderId = EshopPostRepository::getOrdersByUserId($id);
-        if (empty($orderId)) {
-            return false;
-        }
-        return true;
     }
 
     public function executeOrder($id)
     {
-        EshopPostRepository::executeOrder($id, 1);
+        OrderRepository::executeOrder($id, 1);
         header('Location: /index.php?page=usersList');
     }
 
@@ -177,13 +187,9 @@ class AdminController {
             }
 
             $pathToFile = FileUpload::upload("./img/", "image");
-            echo $pathToFile;
 
             if (EshopPostRepository::insertProduct($pathToFile, $_POST["name"], $_POST["description"],
-                $_POST["price"], $_POST["quantity"])) {
-                $newIt = EshopPostRepository::getItemByData($pathToFile, $_POST["name"], $_POST["description"],
-                    $_POST["price"], $_POST["quantity"]);
-                EshopPostRepository::insertItemCategory($newIt["id_item"], $_POST["category"]);
+                $_POST["price"], $_POST["quantity"], $_POST["category"])) {
                 header("Location: /index.php?page=itemsList");
             }
             exit;
@@ -236,7 +242,7 @@ class AdminController {
 
     public function listAllUsersInTable()
     {
-        $dataTable = new DataTable(EshopPostRepository::getAllUsers());
+        $dataTable = new DataTable(UserRepository::getAllUsers());
         $dataTable->addColumn("id_user", "ID");
         $dataTable->addColumn("name", "Jméno");
         $dataTable->addColumn("surname", "Příjmení");
@@ -244,4 +250,79 @@ class AdminController {
         //  $dataTable->addColumn("password", "Heslo");
         $dataTable->renderUsers();
     }
+
+    public function addNewCategory()
+    {
+        $_SESSION["messages"] = array();
+
+        if ($_POST) {
+            if (empty($_POST["newCategory"])) {
+                FlashMessages::error("Zadejte do pole název nové kategorie!");
+            }
+            if (FlashMessages::containsError()) {
+                header("Location: /index.php?page=categoriesList");
+                exit;
+            }
+            if (!empty($_SESSION["messages"])) {
+                print_r($_SESSION["messages"]);
+                return;
+            } else {
+                EshopPostRepository::insertCategory($_POST["newCategory"]);
+                header("Location: /index.php?page=categoriesList");
+            }
+        }
+
+    }
+
+    public function editCategoryByAdmin($id)
+    {
+        $category = EshopPostRepository::getCategoryById($id);
+        echo '<div class="add_product_form">
+        <form action="/index.php?page=categoriesList&action=completeEditCategory&id=' . $id . '" method="post" 
+        enctype="multipart/form-data">
+        <div class="row">
+<label>Název:(*)</label>           
+        <input type="text" name="name" placeholder="Název" value="' . $category["name"] . '">
+        </div>  
+        <div class="row">
+<label>Popis:</label>
+        <textarea name="description" placeholder="popis...">' . $category["description"] . '</textarea>
+        </div>
+        <div class="row">
+        <input name="submitConfirmEdit" type="submit" value="Potvrdit">
+        </div>
+        </form></div>';
+    }
+
+    public function completeEditCategory($id)
+    {
+        $_SESSION["messages"] = array();
+
+        if ($_POST) {
+            if (empty($_POST["name"])) {
+                FlashMessages::error("Není vyplněn název!");
+            }
+
+            if (!empty($_SESSION["messages"])) {
+                print_r($_SESSION["messages"]);
+                return;
+            }
+            EshopPostRepository::updateCategory($id, $_POST["name"], $_POST["description"]);
+            header("Location: /index.php?page=categoriesList");
+        }
+        exit;
+    }
+
+    public function deleteCategory($id)
+    {
+        $items = EshopPostRepository::getAllItemsInCategoryBy($id, "id_item", "asc");
+
+        foreach ($items as $key => $value) {
+            EshopPostRepository::updateItemToUndefinedCategory($items[$key]["id_item"]);
+        }
+        EshopPostRepository::deleteCategory($id);
+        header("Location: /index.php?page=categoriesList");
+    }
+
+
 }

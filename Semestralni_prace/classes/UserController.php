@@ -9,33 +9,21 @@ class UserController
         $_SESSION["logged_user"]["email"] = $email;
     }
 
-    public function listAllInTable()
-    {
-        $dataTable = new DataTable(EshopPostRepository::getAllItems());
-        $dataTable->addColumn("id_item", "ID");
-        $dataTable->addColumn("name", "Název");
-        $dataTable->addColumn("price", "Cena");
-        $dataTable->addColumn("quantity", "Počet zbývajících kusů");
-        $dataTable->addColumn("read_counter", "Počet zobrazení");
-        $dataTable->addColumn("description", "Popis");
-        $dataTable->renderProducts();
-    }
-
     //--------------------------LOGIN-----------------------------------
 
     public function checkUniqueEmail($email)
     {
-        return EshopPostRepository::checkUniqueEmail($email);
+        return UserRepository::checkUniqueEmail($email);
     }
 
     public function addUser($name, $surname, $email, $password, $role)
     {
-        EshopPostRepository::insertUser($name, $surname, $email, $password, $role);
+        UserRepository::insertUser($name, $surname, $email, $password, $role);
     }
 
     public function logUser($emailLogin)
     {
-        $userLog = EshopPostRepository::logUser($emailLogin);
+        $userLog = UserRepository::logUser($emailLogin);
         if (!empty($userLog)) {
             return $userLog;
         }
@@ -59,12 +47,6 @@ class UserController
             <label>Email:</label>
             <label>' . $_SESSION["logged_user"]["email"] . '</label>
         </div></div>';
-        echo '<div id="profile_buttons">';
-    }
-
-    public function getRoleByUserId($id_user)
-    {
-        return EshopPostRepository::getRoleByUserId($id_user);
     }
 
     public function editProfile()
@@ -99,9 +81,8 @@ class UserController
 
                 $name = htmlspecialchars($_POST["nameEdit"]);
                 $surname = htmlspecialchars($_POST["surnameEdit"]);
-                $email = htmlspecialchars($_SESSION["email"]);
-                EshopPostRepository::updateUser($name, $surname, $email);
-                self::changeUserSession($name, $surname, $email);
+                UserRepository::updateUser($name, $surname, $_SESSION["logged_user"]["email"]);
+                self::changeUserSession($name, $surname, $_SESSION["logged_user"]["email"]);
                 header("Location: /index.php?page=myProfile");
             }
         }
@@ -153,7 +134,7 @@ class UserController
                 $street = htmlspecialchars($_POST["street"]);
                 $zipcode = htmlspecialchars($_POST["zipcode"]);
                 $phone = htmlspecialchars($_POST["phone"]);
-                $email = $_SESSION["email"];
+                $email = $_SESSION["logged_user"]["email"];
                 $user_controller->addAddressAndUser_Address($country, $city, $street, $zipcode, $phone, $email);
                 $_SESSION["UserHasAlreadyAddress"] = true;
                 header("Location: /index.php?page=myProfile");
@@ -163,18 +144,23 @@ class UserController
 
     public function addAddressAndUser_Address($country, $city, $street, $zipcode, $phone, $email)
     {
-        EshopPostRepository::insertAddress($country, $city, $street, $zipcode, $phone);
-        $user = EshopPostRepository::getUserByEmail($email);
-        $address = EshopPostRepository::getAddressIdByData($country, $city, $street, $zipcode, $phone);
-        EshopPostRepository::insertUserAddress($user["id_user"], $address["id_address"]);
+        UserRepository::insertAddress($country, $city, $street, $zipcode, $phone);
+        $user = UserRepository::getUserByEmail($email);
+        $address = UserRepository::getAddressIdByData($country, $city, $street, $zipcode, $phone);
+        $_SESSION["address"]["country"] = $country;
+        $_SESSION["address"]["city"] = $city;
+        $_SESSION["address"]["street"] = $street;
+        $_SESSION["address"]["zipcode"] = $zipcode;
+        $_SESSION["address"]["phone"] = $phone;
+        UserRepository::insertUserAddress($user["id_user"], $address["id_address"]);
     }
 
     public function getAddressByEmail($email)
     {
-        $id_us = EshopPostRepository::getUserByEmail($email);
-        $id_ad = EshopPostRepository::getAddressByIdUser($id_us["id_user"]);
+        $id_us = UserRepository::getUserByEmail($email);
+        $id_ad = UserRepository::getAddressByIdUser($id_us["id_user"]);
         if ($id_ad != null) {
-            return EshopPostRepository::getAddressById($id_ad["id_address"]);
+            return UserRepository::getAddressById($id_ad["id_address"]);
         }
         return null;
     }
@@ -249,7 +235,6 @@ class UserController
                 $street = htmlspecialchars($_POST["street"]);
                 $zipcode = htmlspecialchars($_POST["zipcode"]);
                 $phone = htmlspecialchars($_POST["phone"]);
-                $email = $_SESSION["email"];
                 $user_controller->updateAddress($country, $city, $street, $zipcode,
                     $phone, $_SESSION["address"]["id_address"]);
                 header("Location: /index.php?page=myAddress");
@@ -259,6 +244,6 @@ class UserController
 
     private function updateAddress($country, $city, $street, int $zipcode, $phone, $id_address)
     {
-        EshopPostRepository::updateAddress($country, $city, $street, $zipcode, $phone, $id_address);
+        UserRepository::updateAddress($country, $city, $street, $zipcode, $phone, $id_address);
     }
 }

@@ -9,7 +9,7 @@ echo '<div id="menu">';
         <a href="index.php?page=contact">Kontakt</a>
         <a href="index.php?page=gallery">Galerie</a>';
         if(isset($_SESSION["isLogged"])) {
-            if($_SESSION["role"] == 2) {
+            if($_SESSION["logged_user"]["role"] == 2) {
                 echo " ";
                 echo '<a href="index.php?page=usersList" style="word-spacing: 0">Seznam&nbsp;uživatelů</a>
 <a href="index.php?page=itemsList" style="word-spacing: 0">Seznam&nbsp;produktů</a>';
@@ -18,4 +18,3 @@ echo '<div id="menu">';
         echo '</div>
     </nav>
 </div>';
-?>

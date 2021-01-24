@@ -188,6 +188,16 @@ a.category_button:hover{
     width: 50px;
 }
 
+.sorting_radios input[type="button"]{
+    margin-top: 5px;
+    background-color: navy;
+    border:1px solid white;
+    font-size: 0.7em;
+    color: white;
+    cursor: pointer;
+    width: 50px;
+}
+
 .products_add_edit_buttons {
     text-align: center;
     border:1px solid white;
